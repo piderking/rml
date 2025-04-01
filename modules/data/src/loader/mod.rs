@@ -1,4 +1,3 @@
-use std::rc::Rc;
 
 /**
  * @file mod.rs
@@ -8,27 +7,29 @@ use std::rc::Rc;
  */
 
 
+use std::rc::Rc;
+mod types;
+mod entry;
 
-pub trait Entry {
-    
-}
+use parser::File;
 
-pub enum Type <T: Entry> {
+
+
+
+
+pub enum Type <T: entry::Entry> {
     Col( Box<[T]> ),
     Row( Box<[T]> ),
 }
 
 
 
-impl<T> Iterator for Type<T> where T : Entry {
-    type Item = T;
-
-    fn next(&mut self) -> Option<T> {
-        None
-    }
-}
-
-
-pub struct DataLoader < T: Entry > (
+pub struct DataLoader < T: entry::Entry>  (
     Vec<Rc<Type<T>>>
 );
+
+impl <T> DataLoader<T> where T : entry::Entry {
+    pub fn new() -> DataLoader<T>{
+        todo!()
+    }
+}

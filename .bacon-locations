@@ -1,49 +1,3 @@
-warning|:|modules/data/src/loader/mod.rs|:|16|:|16|:|10|:|14|:|variants `Col` and `Row` are never constructed|:|[0m[1m[33mwarning[0m[0m[1m: variants `Col` and `Row` are never constructed[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0mmodules/data/src/loader/mod.rs:17:5[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m16[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum Type <T: Entry> {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;12mvariants in this enum[0m
-[0m[1m[38;5;12m17[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Col( Box<[T]> ),[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^[0m
-[0m[1m[38;5;12m18[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Row( Box<[T]> ),[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
-
-|:|none
-warning|:|modules/data/src/loader/mod.rs|:|17|:|17|:|5|:|8|:|variants `Col` and `Row` are never constructed|:|[0m[1m[33mwarning[0m[0m[1m: variants `Col` and `Row` are never constructed[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0mmodules/data/src/loader/mod.rs:17:5[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m16[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum Type <T: Entry> {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;12mvariants in this enum[0m
-[0m[1m[38;5;12m17[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Col( Box<[T]> ),[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^[0m
-[0m[1m[38;5;12m18[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Row( Box<[T]> ),[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
-
-|:|none
-warning|:|modules/data/src/loader/mod.rs|:|18|:|18|:|5|:|8|:|variants `Col` and `Row` are never constructed|:|[0m[1m[33mwarning[0m[0m[1m: variants `Col` and `Row` are never constructed[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0mmodules/data/src/loader/mod.rs:17:5[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m16[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum Type <T: Entry> {[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[38;5;12m----[0m[0m [0m[0m[1m[38;5;12mvariants in this enum[0m
-[0m[1m[38;5;12m17[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Col( Box<[T]> ),[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^[0m
-[0m[1m[38;5;12m18[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    Row( Box<[T]> ),[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
-
-|:|none
-warning|:|modules/data/src/loader/mod.rs|:|32|:|32|:|12|:|22|:|struct `DataLoader` is never constructed|:|[0m[1m[33mwarning[0m[0m[1m: struct `DataLoader` is never constructed[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0mmodules/data/src/loader/mod.rs:32:12[0m
-[0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m32[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct DataLoader < T: Entry > ([0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^^^[0m
-
-|:|none
 warning|:|modules/math/src/lib.rs|:|1|:|1|:|4|:|8|:|function `main` is never used|:|[0m[1m[33mwarning[0m[0m[1m: function `main` is never used[0m
 [0m [0m[0m[1m[38;5;12m--> [0m[0mmodules/math/src/lib.rs:1:4[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
@@ -51,5 +5,22 @@ warning|:|modules/math/src/lib.rs|:|1|:|1|:|4|:|8|:|function `main` is never use
 [0m  [0m[0m[1m[38;5;12m|[0m[0m    [0m[0m[1m[33m^^^^[0m
 [0m  [0m[0m[1m[38;5;12m|[0m
 [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
+
+|:|none
+error|:|modules/data/src/loader/mod.rs|:|11|:|11|:|1|:|11|:|file not found for module `types`|:|[0m[1m[38;5;9merror[E0583][0m[0m[1m: file not found for module `types`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0mmodules/data/src/loader/mod.rs:11:1[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m11[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mmod types;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to create the module `types`, create file "modules/data/src/loader/types.rs" or "modules/data/src/loader/types/mod.rs"[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: if there is a `mod types` elsewhere in the crate already, import it with `use crate::...` instead[0m
+
+|:|none
+error|:|modules/data/src/loader/mod.rs|:|14|:|14|:|5|:|11|:|unresolved import `parser`|:|[0m[1m[38;5;9merror[E0432][0m[0m[1m: unresolved import `parser`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0mmodules/data/src/loader/mod.rs:14:5[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse parser::File;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^[0m[0m [0m[0m[1m[38;5;9muse of undeclared crate or module `parser`[0m
 
 |:|none
