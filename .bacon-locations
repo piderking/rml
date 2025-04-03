@@ -7,20 +7,70 @@ warning|:|modules/math/src/lib.rs|:|1|:|1|:|4|:|8|:|function `main` is never use
 [0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
 
 |:|none
-error|:|modules/data/src/loader/mod.rs|:|11|:|11|:|1|:|11|:|file not found for module `types`|:|[0m[1m[38;5;9merror[E0583][0m[0m[1m: file not found for module `types`[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0mmodules/data/src/loader/mod.rs:11:1[0m
+warning|:|modules/data/src/loader/mod.rs|:|10|:|10|:|5|:|16|:|unused import: `std::rc::Rc`|:|[0m[1m[33mwarning[0m[0m[1m: unused import: `std::rc::Rc`[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0mmodules/data/src/loader/mod.rs:10:5[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m11[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mmod types;[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;9m^^^^^^^^^^[0m
+[0m[1m[38;5;12m10[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::rc::Rc;[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mhelp[0m[0m: to create the module `types`, create file "modules/data/src/loader/types.rs" or "modules/data/src/loader/types/mod.rs"[0m
-[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: if there is a `mod types` elsewhere in the crate already, import it with `use crate::...` instead[0m
+[0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(unused_imports)]` on by default[0m
 
 |:|none
-error|:|modules/data/src/loader/mod.rs|:|14|:|14|:|5|:|11|:|unresolved import `parser`|:|[0m[1m[38;5;9merror[E0432][0m[0m[1m: unresolved import `parser`[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0mmodules/data/src/loader/mod.rs:14:5[0m
+help|:|modules/data/src/loader/mod.rs|:|2|:|11|:|1|:|1|:|remove the whole `use` item|:|none|:|
+warning|:|modules/data/src/loader/file.rs|:|2|:|2|:|5|:|24|:|unused import: `std::io::prelude::*`|:|[0m[1m[33mwarning[0m[0m[1m: unused import: `std::io::prelude::*`[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0mmodules/data/src/loader/file.rs:2:5[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m2[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::io::prelude::*;[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+help|:|modules/data/src/loader/file.rs|:|2|:|3|:|1|:|1|:|remove the whole `use` item|:|none|:|
+warning|:|modules/data/src/loader/file.rs|:|3|:|3|:|5|:|24|:|unused import: `std::fs::File as FS`|:|[0m[1m[33mwarning[0m[0m[1m: unused import: `std::fs::File as FS`[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0mmodules/data/src/loader/file.rs:3:5[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m3[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse std::fs::File as FS;[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[33m^^^^^^^^^^^^^^^^^^^[0m
+
+|:|none
+help|:|modules/data/src/loader/file.rs|:|3|:|4|:|1|:|1|:|remove the whole `use` item|:|none|:|
+warning|:|modules/data/src/loader/entry.rs|:|8|:|8|:|11|:|16|:|trait `Entry` is never used|:|[0m[1m[33mwarning[0m[0m[1m: trait `Entry` is never used[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0mmodules/data/src/loader/entry.rs:8:11[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub trait Entry {[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m           [0m[0m[1m[33m^^^^^[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m  [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
+
+|:|none
+warning|:|modules/data/src/loader/file.rs|:|8|:|8|:|10|:|23|:|enum `FileExtension` is never used|:|[0m[1m[33mwarning[0m[0m[1m: enum `FileExtension` is never used[0m
+[0m [0m[0m[1m[38;5;12m--> [0m[0mmodules/data/src/loader/file.rs:8:10[0m
+[0m  [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub enum FileExtension {[0m
+[0m  [0m[0m[1m[38;5;12m|[0m[0m          [0m[0m[1m[33m^^^^^^^^^^^^^[0m
+
+|:|none
+warning|:|modules/data/src/loader/file.rs|:|12|:|12|:|12|:|16|:|struct `File` is never constructed|:|[0m[1m[33mwarning[0m[0m[1m: struct `File` is never constructed[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0mmodules/data/src/loader/file.rs:12:12[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m14[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0muse parser::File;[0m
-[0m   [0m[0m[1m[38;5;12m|[0m[0m     [0m[0m[1m[38;5;9m^^^^^^[0m[0m [0m[0m[1m[38;5;9muse of undeclared crate or module `parser`[0m
+[0m[1m[38;5;12m12[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct File<> {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^[0m
+
+|:|none
+warning|:|modules/data/src/loader/file.rs|:|17|:|17|:|1|:|10|:|associated function `new` is never used|:|[0m[1m[33mwarning[0m[0m[1m: associated function `new` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0mmodules/data/src/loader/file.rs:18:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m17[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl File {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m---------[0m[0m [0m[0m[1m[38;5;12massociated function in this implementation[0m
+[0m[1m[38;5;12m18[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn new (ext: &str) -> File{[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^[0m
+
+|:|none
+warning|:|modules/data/src/loader/file.rs|:|18|:|18|:|12|:|15|:|associated function `new` is never used|:|[0m[1m[33mwarning[0m[0m[1m: associated function `new` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0mmodules/data/src/loader/file.rs:18:12[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m17[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl File {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m---------[0m[0m [0m[0m[1m[38;5;12massociated function in this implementation[0m
+[0m[1m[38;5;12m18[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn new (ext: &str) -> File{[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^[0m
 
 |:|none
