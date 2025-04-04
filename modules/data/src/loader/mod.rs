@@ -24,8 +24,6 @@ impl File {
     
     /// Generates a loader object from the specified file
     pub fn generate(&self) -> Loader{
-        match () {
-            
-        }
+        todo!()
     }
 }
