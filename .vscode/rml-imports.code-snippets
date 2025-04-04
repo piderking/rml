@@ -1,0 +1,7 @@
+{
+	"import_module" : {
+		"prefix": "rimp",
+		"scope": "rust",
+		"body": ""
+	}
+}
