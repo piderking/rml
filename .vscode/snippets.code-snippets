@@ -1,0 +1,24 @@
+{
+	// Generate Snippets
+	"new-snippet": {
+		"prefix": "snip",
+		"body": [
+			"\"$1\":{",
+			"\t\"scope\":\"${2:rust}\",",
+			"\t\"prefix\":\"${3:r}\",",
+			"\t\"body\":[",
+			"\t\t$0",
+			"\t]",
+			"},"
+		]
+	},
+	"bdoy-snippet-row":{
+		"prefix":"snip-r",
+		"body":[
+			"\"$0\","
+		]
+	},
+	
+	
+	
+}
