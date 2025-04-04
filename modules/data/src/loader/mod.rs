@@ -18,10 +18,14 @@ mod file;
 
 mod data;
 
+mod types;
+
 impl File {
     
     /// Generates a loader object from the specified file
     pub fn generate(&self) -> Loader{
-        Loader {}
+        match () {
+            
+        }
     }
 }

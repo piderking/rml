@@ -25,6 +25,7 @@ impl File {
         let ex  = match path.extension().and_then(OsStr::to_str).expect("Invalid Extension") {
             "csv" => FileExtension::CSV,
             _ => panic!("Ex=")
+            
         };
 
         File {
@@ -32,5 +33,10 @@ impl File {
             ext: ex
         }
 
+    }
+    pub fn read(&self) -> FS{
+        let file = FS::open(self.location.as_path());    
+
+        file.unwrap()  // should be valid because new created the file
     }
 }
