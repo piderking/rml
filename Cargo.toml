@@ -6,3 +6,4 @@ edition = "2024"
 [dependencies]
 data = { path = "./modules/data" }
 math = { path = "./modules/math" }
+
