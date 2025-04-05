@@ -1,7 +1,33 @@
 {
 	"import_module" : {
-		"prefix": "rimp",
+		"prefix": "@imp",
 		"scope": "rust",
 		"body": ""
-	}
+	},
+	"unit-test":{
+		"scope":"rust",
+		"prefix":"@utest",
+		"body":[
+			
+	    "#[cfg(test)]",
+		"mod ${TM_FILENAME/[\\.rs-]//g} {",
+    	"\tuse super::*;",
+		"\t",
+    	"\t#[test]",
+    	"\tfn ${1:unit_testname}() {",
+        "\t\tassert_eq!(${0:comparison});",
+    	"\t}",
+		"}",
+
+		]
+	},
+	"unit-test-func":{
+		"scope":"",
+		"prefix":"@ufunc",
+		"body":[
+			"fn ${1:unit_testname}() {",
+			"\tassert_eq!(${0:comparison});",
+			"}",
+		]
+	},
 }

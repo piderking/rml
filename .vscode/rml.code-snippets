@@ -16,7 +16,7 @@
 	// 	"description": "Log output to console"
 	// }
 	"header" : {
-		"prefix": "header",
+		"prefix": "!header",
 		"body": [
 			"$BLOCK_COMMENT_START",
 			"File: $RELATIVE_FILEPATH",
@@ -27,7 +27,7 @@
 		]
 	},
 	"struct": {
-		"prefix": "rst" ,
+		"prefix": "@struct" ,
 		"description": "create a public struct",
 		"scope": "rust",
 		"body": [
@@ -37,7 +37,7 @@
 		]
 	},
 	"struct-w-generic": {
-		"prefix": "rstg" ,
+		"prefix": "@struct-generic" ,
 		"description": "create a generic public struct",
 		"scope": "rust",
 		"body": [
@@ -47,7 +47,7 @@
 		]
 	},
 	"struct-w-lifetime": {
-		"prefix": "rstl" ,
+		"prefix": "@struct-lifetime" ,
 		"description": "create a lifetime public struct",
 		"scope": "rust",
 		"body": [
@@ -57,7 +57,7 @@
 		]
 	},
 	"struct-and-impl": {
-		"prefix": "rsti" ,
+		"prefix": "@struct-impl" ,
 		"description": "create a public struct with impl",
 		"scope": "rust",
 		"body": [
