@@ -25,25 +25,25 @@ warning|:|modules/data/src/loader/file.rs|:|2|:|2|:|5|:|24|:|unused import: `std
 
 |:|none
 help|:|modules/data/src/loader/file.rs|:|2|:|3|:|1|:|1|:|remove the whole `use` item|:|none|:|
-warning|:|modules/data/src/loader/mod.rs|:|21|:|21|:|1|:|10|:|method `generate` is never used|:|[0m[1m[33mwarning[0m[0m[1m: method `generate` is never used[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0mmodules/data/src/loader/mod.rs:24:12[0m
+warning|:|modules/data/src/loader/mod.rs|:|23|:|23|:|1|:|10|:|method `generate` is never used|:|[0m[1m[33mwarning[0m[0m[1m: method `generate` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0mmodules/data/src/loader/mod.rs:26:12[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m21[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl File {[0m
+[0m[1m[38;5;12m23[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl File {[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m---------[0m[0m [0m[0m[1m[38;5;12mmethod in this implementation[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m24[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn generate(&self) -> Loader{[0m
+[0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn generate(&self) -> Loader{[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
 [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
 
 |:|none
-warning|:|modules/data/src/loader/mod.rs|:|24|:|24|:|12|:|20|:|method `generate` is never used|:|[0m[1m[33mwarning[0m[0m[1m: method `generate` is never used[0m
-[0m  [0m[0m[1m[38;5;12m--> [0m[0mmodules/data/src/loader/mod.rs:24:12[0m
+warning|:|modules/data/src/loader/mod.rs|:|26|:|26|:|12|:|20|:|method `generate` is never used|:|[0m[1m[33mwarning[0m[0m[1m: method `generate` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0mmodules/data/src/loader/mod.rs:26:12[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
-[0m[1m[38;5;12m21[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl File {[0m
+[0m[1m[38;5;12m23[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl File {[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m---------[0m[0m [0m[0m[1m[38;5;12mmethod in this implementation[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m24[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn generate(&self) -> Loader{[0m
+[0m[1m[38;5;12m26[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn generate(&self) -> Loader{[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^^^[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
 [0m   [0m[0m[1m[38;5;12m= [0m[0m[1mnote[0m[0m: `#[warn(dead_code)]` on by default[0m
@@ -78,7 +78,7 @@ warning|:|modules/data/src/loader/file.rs|:|19|:|19|:|1|:|10|:|associated items 
 [0m[1m[38;5;12m20[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn new (ext: &str) -> File{[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m36[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn read(&self) -> FS{[0m
+[0m[1m[38;5;12m37[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn read(&self) -> FS{[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^[0m
 
 |:|none
@@ -90,11 +90,11 @@ warning|:|modules/data/src/loader/file.rs|:|20|:|20|:|12|:|15|:|associated items
 [0m[1m[38;5;12m20[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn new (ext: &str) -> File{[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m36[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn read(&self) -> FS{[0m
+[0m[1m[38;5;12m37[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn read(&self) -> FS{[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^[0m
 
 |:|none
-warning|:|modules/data/src/loader/file.rs|:|36|:|36|:|12|:|16|:|associated items `new` and `read` are never used|:|[0m[1m[33mwarning[0m[0m[1m: associated items `new` and `read` are never used[0m
+warning|:|modules/data/src/loader/file.rs|:|37|:|37|:|12|:|16|:|associated items `new` and `read` are never used|:|[0m[1m[33mwarning[0m[0m[1m: associated items `new` and `read` are never used[0m
 [0m  [0m[0m[1m[38;5;12m--> [0m[0mmodules/data/src/loader/file.rs:20:12[0m
 [0m   [0m[0m[1m[38;5;12m|[0m
 [0m[1m[38;5;12m19[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl File {[0m
@@ -102,7 +102,7 @@ warning|:|modules/data/src/loader/file.rs|:|36|:|36|:|12|:|16|:|associated items
 [0m[1m[38;5;12m20[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn new (ext: &str) -> File{[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^[0m
 [0m[1m[38;5;12m...[0m
-[0m[1m[38;5;12m36[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn read(&self) -> FS{[0m
+[0m[1m[38;5;12m37[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    pub fn read(&self) -> FS{[0m
 [0m   [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^[0m
 
 |:|none
@@ -111,5 +111,23 @@ warning|:|modules/data/src/loader/data.rs|:|8|:|8|:|12|:|18|:|struct `Loader` is
 [0m  [0m[0m[1m[38;5;12m|[0m
 [0m[1m[38;5;12m8[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mpub struct Loader {[0m
 [0m  [0m[0m[1m[38;5;12m|[0m[0m            [0m[0m[1m[33m^^^^^^[0m
+
+|:|none
+warning|:|modules/data/src/loader/types/mod.rs|:|20|:|20|:|1|:|10|:|associated function `new` is never used|:|[0m[1m[33mwarning[0m[0m[1m: associated function `new` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0mmodules/data/src/loader/types/mod.rs:21:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m20[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl Type {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m---------[0m[0m [0m[0m[1m[38;5;12massociated function in this implementation[0m
+[0m[1m[38;5;12m21[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn new(st: &str)  -> Type {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^[0m
+
+|:|none
+warning|:|modules/data/src/loader/types/mod.rs|:|21|:|21|:|8|:|11|:|associated function `new` is never used|:|[0m[1m[33mwarning[0m[0m[1m: associated function `new` is never used[0m
+[0m  [0m[0m[1m[38;5;12m--> [0m[0mmodules/data/src/loader/types/mod.rs:21:8[0m
+[0m   [0m[0m[1m[38;5;12m|[0m
+[0m[1m[38;5;12m20[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0mimpl Type {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m [0m[0m[1m[38;5;12m---------[0m[0m [0m[0m[1m[38;5;12massociated function in this implementation[0m
+[0m[1m[38;5;12m21[0m[0m [0m[0m[1m[38;5;12m|[0m[0m [0m[0m    fn new(st: &str)  -> Type {[0m
+[0m   [0m[0m[1m[38;5;12m|[0m[0m        [0m[0m[1m[33m^^^[0m
 
 |:|none
