@@ -23,7 +23,20 @@
         		"wakatime.vscode-wakatime",
         		"tamasfe.even-better-toml"
 
-			]
+			],
+			"settings":{
+				"files.exclude": {
+					"**/target": true,
+					"**/Cargo.lock": true,
+					".bacon-locations": true
+				}, 
+				"editor.inlineSuggest.enabled": true,
+				"git.autofetch": true,
+				"workbench.iconTheme": "icons",
+				"workbench.preferredDarkColorTheme": "City Lights"
+			
+			
+			}
 		}
 	}
 
