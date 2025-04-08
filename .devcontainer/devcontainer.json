@@ -15,7 +15,14 @@
 				"VisualStudioExptTeam.vscodeintellicode",
 				"fill-labs.dependi",
 				"christian-kohler.path-intellisense",
-				"rust-lang.rust-analyzer"
+				"rust-lang.rust-analyzer",
+				"yummygum.city-lights-theme",
+				"tal7aouy.icons",
+        		"gruntfuggly.todo-tree",
+        		"nefrob.vscode-just-syntax",
+        		"wakatime.vscode-wakatime",
+        		"tamasfe.even-better-toml"
+
 			]
 		}
 	}

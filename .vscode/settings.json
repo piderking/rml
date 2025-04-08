@@ -8,7 +8,6 @@
     "git.autofetch": true,
     "workbench.iconTheme": "icons",
     "workbench.preferredDarkColorTheme": "City Lights",
-    "workbench.activityBar.iconClickBehavior": "focus",
-    "workbench.activityBar.location": "top",
+
 
 }
