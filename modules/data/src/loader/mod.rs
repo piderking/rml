@@ -9,14 +9,12 @@
 
 use std::rc::Rc;
 
-use data::Loader;
 use file::File;
-
+use types::Loader;
 mod entry;
 
 mod file;
 
-mod data;
 
 mod types;
 

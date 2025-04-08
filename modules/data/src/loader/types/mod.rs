@@ -1,4 +1,4 @@
-use std::fmt;
+use std::{any::type_name, fmt, rc::Rc};
 
 /**
  * @file mod.rs
@@ -37,3 +37,23 @@ impl fmt::Display for Type {
     }
 }
 
+pub struct Loader<'a> {
+    labels: Vec<String>, // return str refrences
+    data: Vec<Container<'a>>
+}
+
+pub enum Container<'a> {
+    INT(Rc<[i32]>),
+    FLOAT(Rc<[f32]>),
+    SRING(Rc<[&'a str]>),
+}
+
+impl Container <'_> {
+    fn new (items: Rc<[&str]>) -> Container { 
+        
+        match Type::new(items.first().unwrap()) {
+            
+            _ => Container::SRING(items)
+        }
+    }    
+}
