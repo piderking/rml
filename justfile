@@ -9,4 +9,4 @@ test:
 
 test-all:
     bash scripts/test-all.sh
-
+cl

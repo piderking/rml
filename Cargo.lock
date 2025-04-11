@@ -5,16 +5,10 @@ version = 4
 [[package]]
 name = "data"
 version = "0.1.0"
-dependencies = [
- "util",
-]
 
 [[package]]
 name = "math"
 version = "0.1.0"
-dependencies = [
- "util",
-]
 
 [[package]]
 name = "rml"
@@ -23,7 +17,3 @@ dependencies = [
  "data",
  "math",
 ]
-
-[[package]]
-name = "util"
-version = "0.1.0"

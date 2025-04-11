@@ -1,59 +1,52 @@
-use std::{any::type_name, fmt, rc::Rc};
+use std::collections::HashMap;
+use std::fmt::Debug;
+use std::{
+    any::type_name,
+    fmt::{self, Display, format},
+    rc::Rc,
+};
 
 /**
  * @file mod.rs
- * @description 
+ * @description
  * @author piderking
  * @copyright Copyright (c) 2025 piderking
  */
 
-
-#[allow(dead_code)]
-#[derive(Debug)]
-pub enum Type {
-    INT(i32), // TODO change size of data type... i32 for now
-    FLOAT(f32),
-    STRING(String),
+pub struct Loader {
+    cols: Vec<String>,
+    data: Vec<Array<Type>>,
 }
-
-
-impl Type {
-    fn new(st: &str)  -> Type {
-        match (st.parse::<i32>(), st.parse::<f32>()) {
-            (Ok(n), _) => Type::INT(n),
-            (_, Ok(n)) => Type::FLOAT(n),
-            (_, _) => Type::STRING(String::from(st))
+impl Loader {
+    fn new() -> Loader {
+        Loader {
+            cols: Vec::new(),
+            data: Vec::new(),
         }
-    }    
-}
-impl fmt::Display for Type {
-    // This trait requires `fmt` with this exact signature.
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        // Write strictly the first element into the supplied output
-        // stream: `f`. Returns `fmt::Result` which indicates whether the
-        // operation succeeded or failed. Note that `write!` uses syntax which
-        // is very similar to `println!`.
-        write!(f, "{}", self.to_string())
     }
 }
 
-pub struct Loader<'a> {
-    labels: Vec<String>, // return str refrences
-    data: Vec<Container<'a>>
-}
 
-pub enum Container<'a> {
+
+
+pub enum Array {
+    // must be i32, f32, usize, str
+    // Distributes refrences to this data...
     INT(Rc<[i32]>),
     FLOAT(Rc<[f32]>),
-    SRING(Rc<[&'a str]>),
+    STRING(Rc<Box<[String]>>),
+    Empty,
 }
 
-impl Container <'_> {
-    fn new (items: Rc<[&str]>) -> Container { 
-        
-        match Type::new(items.first().unwrap()) {
-            
-            _ => Container::SRING(items)
-        }
-    }    
+impl<T: Iterator> From<T> for Array {
+    fn from(value: T) -> Self {
+        value.map(|i|)
+        Self::Empty
+    }
+}
+
+impl Array {
+    fn new() -> Array {
+        Array::Empty
+    }
 }

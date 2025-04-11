@@ -33,7 +33,8 @@
 				"editor.inlineSuggest.enabled": true,
 				"git.autofetch": true,
 				"workbench.iconTheme": "icons",
-				"workbench.preferredDarkColorTheme": "City Lights"
+				"workbench.preferredDarkColorTheme": "City Lights",
+				"editor.formatOnSave": true
 			
 			
 			}
