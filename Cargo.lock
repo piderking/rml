@@ -3,17 +3,13 @@
 version = 4
 
 [[package]]
-name = "data"
-version = "0.1.0"
-
-[[package]]
-name = "math"
-version = "0.1.0"
-
-[[package]]
 name = "rml"
 version = "0.1.0"
-dependencies = [
- "data",
- "math",
-]
+
+[[package]]
+name = "rml-data"
+version = "0.1.0"
+
+[[package]]
+name = "rml-math"
+version = "0.1.0"

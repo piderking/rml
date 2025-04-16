@@ -1,9 +1,5 @@
-[package]
-name = "rml"
-version = "0.1.0"
-edition = "2024"
+[workspace]
+resolver = "2"
 
-[dependencies]
-data = { path = "./modules/data" }
-math = { path = "./modules/math" }
-
+package.description = "Rust Machine Learning Library"
+members = ["rml", "rml-data", "rml-math"]

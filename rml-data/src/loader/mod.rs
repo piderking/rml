@@ -10,18 +10,15 @@
 use std::rc::Rc;
 
 use file::File;
-use types::Loader;
-mod entry;
 
 mod file;
 
 
-mod types;
 
 impl File {
     
     /// Generates a loader object from the specified file
-    pub fn generate(&self) -> Loader{
+    pub fn generate(&self) -> !{
         todo!()
     }
 } 
