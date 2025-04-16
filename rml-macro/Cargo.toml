@@ -9,6 +9,7 @@ syn = "2.0"
 quote = "1.0"
 rml-data = { path = "../rml-data" }
 proc-macro2 = "1.0.95"
+enum-iterator = "2.1.0"
 
 [lib]
 proc-macro = true
