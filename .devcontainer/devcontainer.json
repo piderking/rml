@@ -21,6 +21,7 @@
         		"gruntfuggly.todo-tree",
         		"nefrob.vscode-just-syntax",
         		"wakatime.vscode-wakatime",
+				//"ghcr.io/devcontainers/features/nvidia-cuda:1":{},
         		"tamasfe.even-better-toml"
 
 			],
