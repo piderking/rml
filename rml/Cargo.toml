@@ -5,3 +5,4 @@ edition = "2024"
 description.workspace = true
 
 [dependencies]
+rml-data = { path = "../rml-data" }

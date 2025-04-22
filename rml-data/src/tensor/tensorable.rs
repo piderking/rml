@@ -1,19 +1,11 @@
-use super::Tensor;
-pub trait Tensorable {
-    type Data: Clone;
-    fn to_tensor(&self) -> &Tensor<Self::Data>;
-}
+use std::any::Any;
+use std::io::Error;
 
-impl<T: Clone> Tensorable for Tensor<T> {
-    type Data = T;
-    fn to_tensor(&self) -> &Tensor<Self::Data> {
-        // slipsided
-        self
-    }
-}
+use super::tensor::TensorWrapper;
 
-impl<T: Clone> From<&dyn Tensorable<Data = T>> for Tensor<T> {
-    fn from(value: &dyn Tensorable<Data = T>) -> Tensor<T> {
-        value.to_tensor().clone()
-    }
-}
+pub trait Tensorable {}
+
+impl Tensorable for i32 {}
+impl Tensorable for f32 {}
+impl Tensorable for i16 {}
+impl<T: Tensorable> Tensorable for TensorWrapper<T> {}
