@@ -1,11 +1,33 @@
-use std::any::Any;
-use std::io::Error;
+use super::tensor::{Tensor, TensorBound};
 
-use super::tensor::TensorWrapper;
+// Trait Bound for primitives and objects
+// Bind the types that can be tensorable
+pub trait Tensorable<'a>: Copy {
+    type Result: TensorBound<'a>;
 
-pub trait Tensorable {}
+    fn to_value(&self) -> Self;
+    fn to_tensor(&self) -> Self::Result;
+}
 
-impl Tensorable for i32 {}
-impl Tensorable for f32 {}
-impl Tensorable for i16 {}
-impl<T: Tensorable> Tensorable for TensorWrapper<T> {}
+impl<'a> Tensorable<'a> for i32 {
+    type Result = Tensor<'a, i32>;
+
+    fn to_value(&self) -> Self {
+        *self
+    }
+
+    fn to_tensor(&self) -> Self::Result {
+        Tensor::new(vec![*self])
+    }
+}
+
+impl<'a> Tensorable<'a> for f32 {
+    type Result = Tensor<'a, f32>;
+
+    fn to_value(&self) -> Self {
+        *self
+    }
+    fn to_tensor(&self) -> Self::Result {
+        Tensor::new(vec![*self])
+    }
+}

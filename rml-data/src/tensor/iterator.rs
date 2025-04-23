@@ -1,33 +1,33 @@
-use std::{any::Any, marker::PhantomData};
+use std::marker::PhantomData;
 
-use super::{tensorable::Tensorable, wrapper::Tensor};
+use super::{
+    tensor::{Tensor, TensorBound},
+    tensorable::Tensorable,
+};
 
-pub struct TensorItterator<T: Tensorable + Clone> {
+pub struct MutTensorItterator<'a, T: Tensorable<'a>> {
     curr: usize,
-    tensor: Tensor<T>,
+    tensor: Vec<T>,
+    phn: PhantomData<&'a T>,
 }
 
-impl<T: Tensorable + Copy> Iterator for TensorItterator<T> {
-    type Item = T;
+pub struct TensorItterator<'a, T: Tensorable<'a>> {
+    curr: usize,
+    tensor: Vec<T>, // Convert Tensor into Vec[]
+    phn: PhantomData<&'a T>,
+}
 
-    fn next(&mut self) -> Option<Self::Item> {
-        self.curr += 1;
-        match self.tensor.get(self.curr) {
-            Option::Some(n) => Option::Some(*n),
-            _ => Option::None,
-        }
+impl<'a, T: Tensorable<'a>> From<Tensor<'a, T>> for Vec<T> {
+    fn from(value: Tensor<'a, T>) -> Self {
+        value.into()
     }
 }
+// impl Itterator
 
+// Convert from any trait object into TensorWrapper()
 /*
-impl<T: Any + Clone> Tensorable for TensorItterator<T> {
-    type Data = T;
-    fn to_tensor(&self) -> &Tensor<Self::Data> {
-        &self.tensor
+impl<T: Tensorable> From<Box<dyn TensorBound<T = T>>> for Tensor<T> {
+    fn from(value: Box<dyn TensorBound<T = T>>) -> Self {
+        value.to_tensor()
     }
-    fn size(&self) -> Vec<usize> {
-        todo!()
-    }
-}
-
-*/
+} */
