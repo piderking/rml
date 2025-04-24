@@ -2,51 +2,56 @@ use std::{
     cell::{Ref, RefCell},
     marker::PhantomData,
     ops,
+    option::IterMut,
     rc::Rc,
 };
 
-use super::tensorable::Tensorable;
+use super::{iterator::TensorVecWrapper, tensorable::Tensorable};
 
-pub trait TensorBound<'a> {
-    type T: Tensorable<'a>;
-    fn to_tensor(&'a self) -> &'a Tensor<'a, Self::T>;
+pub trait TensorBound {
+    type T: Tensorable;
+    fn to_tensor(&self) -> &Tensor<Self::T>;
 }
 
-#[derive(Clone)] // going to be managing the data --> 
-pub struct Tensor<'a, T: Tensorable<'a>> {
+#[derive(Clone, Default)] // going to be managing the data --> 
+pub struct Tensor<T: Tensorable> {
     /// wrapper of the Vec<> class --> additional methods
-    pub(crate) data: Rc<RefCell<Vec<T>>>,
-    phn: PhantomData<&'a T>,
+    data: Rc<RefCell<Vec<T>>>,
 }
 
-impl<'a, T: Tensorable<'a>> TensorBound<'a> for Tensor<'a, T> {
+impl<T: Tensorable> TensorBound for Tensor<T> {
     type T = T;
-    fn to_tensor(&'a self) -> &'a Tensor<'a, Self::T> {
+    fn to_tensor(&self) -> &Tensor<Self::T> {
         return &*self;
     }
 }
 
-impl<'a, T: Tensorable<'a>> Tensor<'a, T> {
-    pub fn new(data: Vec<T>) -> Tensor<'a, T> {
+impl<T: Tensorable> Tensor<T> {
+    pub fn new(data: Vec<T>) -> Tensor<T> {
         // check for the size to be identical
         Tensor {
             data: Rc::new(RefCell::new(data)),
-            phn: PhantomData,
         }
     }
-    pub fn get(&'a self, i: usize) -> Option<Ref<'a, T>> {
+    pub fn get(&self, i: usize) -> Option<Ref<'_, T>> {
         Option::Some(Ref::map(self.data.borrow(), |x| &x[i]))
+    }
+
+    pub fn iter(&self) -> TensorVecWrapper<T> {
+        TensorVecWrapper {
+            r: self.data.borrow(),
+        }
     }
 }
 
-impl<'a, T: Tensorable<'a>> From<&[T]> for Tensor<'a, T> {
+impl<T: Tensorable> From<&[T]> for Tensor<T> {
     fn from(value: &[T]) -> Self {
         Tensor::new(Vec::from(value))
     }
 }
 
-impl<'a, T: Tensorable<'a>> From<&'a dyn TensorBound<'a, T = T>> for &'a Tensor<'a, T> {
-    fn from(value: &'a dyn TensorBound<'a, T = T>) -> Self {
+/*impl<T: Tensorable> From<&dyn TensorBound<T = T>> for &'_ Tensor<T> {
+    fn from(value: &dyn TensorBound<T = T>) -> Self {
         value.to_tensor()
     }
-}
+} */
