@@ -56,7 +56,7 @@ impl<T: Tensorable> Tensor<T> {
         n.insert(i, t);
         l
     }
-    pub fn set_from_borrow(&mut self, mut bor:  std::cell::RefMut<'_, Vec<T>>,  i: usize, t: T) -> T {;
+    pub fn set_from_borrow(&mut self, mut bor: std::cell::RefMut<'_, Vec<T>>, i: usize, t: T) -> T {
         let l = bor.swap_remove(i);
         bor.insert(i, t);
         l
@@ -79,6 +79,16 @@ impl<T: Tensorable> Tensor<T> {
         self.as_ref()
     }
 
+    pub fn map_zip<F: FnMut(&mut T, &T) -> T>(&mut self, item: Tensor<T>, mut f: F) -> Self {
+        let mut t = self.data.borrow_mut();
+        let o = item.data.borrow();
+
+        for (i1, i2) in t.iter_mut().zip(o.iter()) {
+            *i1 = f(i1, i2);
+        }
+        self.as_ref()
+    }
+
     pub fn push(&mut self, t: T) -> Tensor<T> {
         self.data.borrow_mut().push(t);
         self.as_ref()
@@ -88,21 +98,28 @@ impl<T: Tensorable> Tensor<T> {
         self.as_ref()
     }
 
-    pub fn combine(&mut self, other: Tensor<T>) -> Tensor<T>
+    pub fn combine(&mut self, item: Tensor<T>) -> Tensor<T>
     where
         T: Add<Output = T>,
     {
-        let mut bor = self.data.borrow_mut();
-        // self.set_from_borrow(bor, i, t);
-        self.iter()
-            .into_iter()
-            .zip_longest(other.iter().into_iter())
-            .enumerate()
-            .for_each(|i| match i {
-                (id, Left(_a)) => todo!(), // check if size exsists
-                (id, Right(_a)) => todo!(),
-                (_, Both(_n, _a)) => self.set(, t)
-            });
+        {
+            // to keep values alive
+            let this = self.iter();
+            let other = item.iter();
+
+            let this_iter = this.into_iter();
+            let other_iter = other.into_iter();
+
+            // extend vector to applicable size
+            if this_iter.len() < other_iter.len() {
+                self.data
+                    .borrow_mut()
+                    .extend(vec![T::default(); other_iter.len() - this_iter.len()]);
+            }
+        }
+        // call instance function
+        self.map_zip(item, |i1, i2| *i1 + *i2);
+        self.as_ref()
     }
 
     pub fn iter(&self) -> TensorVecWrapper<'_, T> {
