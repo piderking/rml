@@ -1,3 +1,4 @@
+pub mod error;
 pub mod iterator;
 pub mod tensor;
 pub mod tensorable;

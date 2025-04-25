@@ -6,7 +6,7 @@ use std::{
     rc::Rc,
 };
 
-use super::{iterator::TensorVecWrapper, tensorable::Tensorable};
+use super::{error::TensorError, iterator::TensorVecWrapper, tensorable::Tensorable};
 
 pub trait TensorBound {
     type T: Tensorable;
@@ -34,6 +34,22 @@ impl<T: Tensorable> Tensor<T> {
             data: RefCell::new(data),
         }
     }
+    pub fn get(&self, i: usize) -> Option<T> {
+        match self.data.borrow().get(i) {
+            Option::Some(n) => Option::Some(*n),
+            Option::None => Option::None,
+        }
+    }
+    pub fn set(&mut self, i: usize, t: T) -> Result<T, TensorError> {
+        match self.data.try_borrow_mut() {
+            Ok(mut n) => {
+                let l = n.swap_remove(i);
+                Ok(l)
+            }
+            Err(n) => Err(TensorError::BorrowMutError(n)),
+        }
+    }
+
     pub fn iter(&self) -> TensorVecWrapper<'_, T> {
         TensorVecWrapper {
             r: self.data.borrow(),
