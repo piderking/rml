@@ -5,6 +5,7 @@ use super::tensor::{Tensor, TensorBound};
 pub trait Tensorable: Copy {
     type Result: TensorBound;
 
+    fn default() -> Self;
     fn to_value(&self) -> Self;
     fn to_tensor(&self) -> Self::Result;
 }
@@ -12,6 +13,9 @@ pub trait Tensorable: Copy {
 impl Tensorable for i32 {
     type Result = Tensor<i32>;
 
+    fn default() -> Self {
+        0
+    }
     fn to_value(&self) -> Self {
         *self
     }
@@ -24,6 +28,9 @@ impl Tensorable for i32 {
 impl Tensorable for f32 {
     type Result = Tensor<f32>;
 
+    fn default() -> Self {
+        0.0
+    }
     fn to_value(&self) -> Self {
         *self
     }
@@ -35,6 +42,9 @@ impl Tensorable for f32 {
 impl<'a> Tensorable for &'a str {
     type Result = Tensor<&'a str>;
 
+    fn default() -> Self {
+        &""
+    }
     fn to_value(&self) -> Self {
         self
     }
