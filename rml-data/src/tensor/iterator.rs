@@ -1,4 +1,7 @@
-use std::{cell::Ref, slice::Iter};
+use std::{
+    cell::{Ref, RefMut},
+    slice::{Iter, IterMut},
+};
 
 use super::{tensor::Tensor, tensorable::Tensorable};
 

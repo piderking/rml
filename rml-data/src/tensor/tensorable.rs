@@ -31,3 +31,14 @@ impl Tensorable for f32 {
         Tensor::new(vec![*self])
     }
 }
+
+impl<'a> Tensorable for &'a str {
+    type Result = Tensor<&'a str>;
+
+    fn to_value(&self) -> Self {
+        self
+    }
+    fn to_tensor(&self) -> Self::Result {
+        Tensor::new(vec![self])
+    }
+}

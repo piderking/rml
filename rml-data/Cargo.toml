@@ -5,4 +5,5 @@ edition = "2024"
 description.workspace = true
 
 [dependencies]
+itertools = "0.14.0"
 thiserror = "2.0.12"

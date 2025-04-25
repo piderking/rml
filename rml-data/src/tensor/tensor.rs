@@ -1,10 +1,13 @@
-use core::fmt;
-use std::{
-    cell::{Cell, Ref, RefCell}, fmt::Debug, marker::PhantomData, ops::{self, Index}, option::IterMut, rc::Rc, slice::SliceIndex
-};
-use std::fmt::Display;
-
 use super::{error::TensorError, iterator::TensorVecWrapper, tensorable::Tensorable};
+use itertools::EitherOrBoth::{Both, Left, Right};
+use itertools::Itertools;
+use std::fmt::Display;
+use std::ops::Add;
+use std::{
+    cell::{Ref, RefCell},
+    fmt::Debug,
+    rc::Rc,
+};
 
 pub trait TensorBound {
     type T: Tensorable;
@@ -33,11 +36,12 @@ impl<T: Tensorable> Tensor<T> {
             data: Rc::new(RefCell::new(data)),
         }
     }
-    pub fn from(data:Rc<RefCell<Vec<T>>>) -> Tensor<T> {
+    pub fn len(&self) -> usize {
+        self.data.borrow().len()
+    }
+    pub fn from(data: Rc<RefCell<Vec<T>>>) -> Tensor<T> {
         // check for the size to be identical
-        Tensor {
-            data,
-        }
+        Tensor { data }
     }
     pub fn get(&self, i: usize) -> Option<T> {
         match self.get_data_ref().get(i) {
@@ -45,45 +49,68 @@ impl<T: Tensorable> Tensor<T> {
             Option::None => Option::None,
         }
     }
-    
-    
-    pub fn set(&mut self, i: usize, t: T) -> Result<T, TensorError> {
-        match self.data.try_borrow_mut() {
-            Ok(mut n) => {
-                let l = n.swap_remove(i);
-                n.insert(i, t,);
-                Ok(l)
-            }
-            Err(n) => Err(TensorError::BorrowMutError(n)),
-        }
+
+    pub fn set(&mut self, i: usize, t: T) -> T {
+        let mut n = self.data.borrow_mut();
+        let l = n.swap_remove(i);
+        n.insert(i, t);
+        l
+    }
+    pub fn set_from_borrow(&mut self, mut bor:  std::cell::RefMut<'_, Vec<T>>,  i: usize, t: T) -> T {;
+        let l = bor.swap_remove(i);
+        bor.insert(i, t);
+        l
     }
 
-    pub fn as_ref(&self)-> Tensor<T>{ // still pointing to the same data
+    pub fn as_ref(&self) -> Tensor<T> {
+        // still pointing to the same data
         Tensor::from(self.data.clone())
     }
 
-    pub fn get_data_ref (&self) -> Ref<'_, Vec<T>> {
+    pub fn get_data_ref(&self) -> Ref<'_, Vec<T>> {
         self.data.borrow()
     }
 
-    pub fn map<F: FnMut(&mut T)->T >(&mut self,mut f: F) -> Self {
+    pub fn map<F: FnMut(&mut T) -> T>(&mut self, mut f: F) -> Self {
         let mut t = self.data.borrow_mut();
         for item in t.iter_mut() {
             *item = f(item);
         }
         self.as_ref()
     }
-    
+
+    pub fn push(&mut self, t: T) -> Tensor<T> {
+        self.data.borrow_mut().push(t);
+        self.as_ref()
+    }
+    pub fn insert(&mut self, i: usize, t: T) -> Tensor<T> {
+        self.data.borrow_mut().insert(i, t);
+        self.as_ref()
+    }
+
+    pub fn combine(&mut self, other: Tensor<T>) -> Tensor<T>
+    where
+        T: Add<Output = T>,
+    {
+        let mut bor = self.data.borrow_mut();
+        // self.set_from_borrow(bor, i, t);
+        self.iter()
+            .into_iter()
+            .zip_longest(other.iter().into_iter())
+            .enumerate()
+            .for_each(|i| match i {
+                (id, Left(_a)) => todo!(), // check if size exsists
+                (id, Right(_a)) => todo!(),
+                (_, Both(_n, _a)) => self.set(, t)
+            });
+    }
+
     pub fn iter(&self) -> TensorVecWrapper<'_, T> {
         TensorVecWrapper {
             r: self.data.borrow(),
         }
     }
-    
-
-    
 }
-
 
 impl<T: Tensorable> From<Vec<T>> for Tensor<T> {
     fn from(value: Vec<T>) -> Self {
@@ -91,7 +118,7 @@ impl<T: Tensorable> From<Vec<T>> for Tensor<T> {
     }
 }
 
-impl <T: Tensorable + Debug> Display for Tensor<T>{
+impl<T: Tensorable + Debug> Display for Tensor<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{:?}", self.data.borrow())
     }
