@@ -14,3 +14,16 @@ where
         self.combine(rhs)
     }
 }
+
+// combine together the two tensors
+impl<T> Mul<Tensor<T>> for Tensor<T>
+where
+    T: Tensorable,
+    T: Mul<Output = T>,
+{
+    type Output = Tensor<T>;
+
+    fn mul(mut self, rhs: Tensor<T>) -> Self::Output {
+        self.dot(rhs)
+    }
+}

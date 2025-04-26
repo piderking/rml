@@ -2,7 +2,7 @@ use super::{error::TensorError, iterator::TensorVecWrapper, tensorable::Tensorab
 use itertools::EitherOrBoth::{Both, Left, Right};
 use itertools::Itertools;
 use std::fmt::Display;
-use std::ops::Add;
+use std::ops::{Add, Mul};
 use std::{
     cell::{Ref, RefCell},
     fmt::Debug,
@@ -119,6 +119,30 @@ impl<T: Tensorable> Tensor<T> {
         }
         // call instance function
         self.map_zip(item, |i1, i2| *i1 + *i2);
+        self.as_ref()
+    }
+
+    pub fn dot(&mut self, item: Tensor<T>) -> Tensor<T>
+    where
+        T: Mul<Output = T>,
+    {
+        {
+            // to keep values alive
+            let this = self.iter();
+            let other = item.iter();
+
+            let this_iter = this.into_iter();
+            let other_iter = other.into_iter();
+
+            // extend vector to applicable size
+            if this_iter.len() < other_iter.len() {
+                self.data
+                    .borrow_mut()
+                    .extend(vec![T::default(); other_iter.len() - this_iter.len()]);
+            }
+        }
+        // call instance function
+        self.map_zip(item, |i1, i2| *i1 * *i2);
         self.as_ref()
     }
 
