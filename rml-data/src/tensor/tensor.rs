@@ -1,4 +1,4 @@
-use super::error::TensorOpperationError;
+use super::error::{TensorOpperationError, TensorSizeError};
 use super::len::{ActiveTensorSize, TensorSizable, TensorSize};
 use super::{error::TensorError, iterator::TensorIterWrapper, tensortype::TensorType};
 use std::fmt::{Display, Error, Formatter};
@@ -9,16 +9,10 @@ use std::{
     rc::Rc,
 };
 
-
-
 pub trait TensorBound {
     type T: TensorType; // Resulting Value 
-    fn size (&self) -> TensorSize;
+    fn size(&self) -> TensorSize;
 }
-
-
-
-
 
 #[derive(Debug, Clone)]
 pub struct Tensor<T: TensorType> {
@@ -29,7 +23,19 @@ pub struct Tensor<T: TensorType> {
 }
 
 impl<T: TensorType> Tensor<T> {
-    pub fn new(data: Vec<T>) -> Tensor<T>{
+    pub fn new_check(data: Vec<T>) -> Result<Tensor<T>, TensorSizeError> {
+        if T::is_tensor() && !data.get(0).is_none() {
+            let size = data.get(0).unwrap().size().unwrap();
+            if data.iter().filter(|e| size != e.size().unwrap()).count() > 0 {
+                Err(TensorSizeError::InvalidSize { t1: size })
+            } else {
+                Ok(Tensor::from(Rc::new(RefCell::new(data))))
+            }
+        } else {
+            Ok(Tensor::from(Rc::new(RefCell::new(data))))
+        }
+    }
+    pub fn new(data: Vec<T>) -> Tensor<T> {
         Tensor::from(Rc::new(RefCell::new(data)))
     }
     pub fn from(data: Rc<RefCell<Vec<T>>>) -> Tensor<T> {
@@ -42,7 +48,7 @@ impl<T: TensorType> Tensor<T> {
     pub fn size(&self) -> TensorSize {
         self.size.fetch()
     }
-    
+
     pub fn get(&self, i: usize) -> Option<T> {
         match self.get_data_ref().get(i) {
             Option::Some(n) => Option::Some(n.clone()),
@@ -125,7 +131,6 @@ impl<T: TensorType> Tensor<T> {
     pub fn combine_mul(&mut self, item: Tensor<T>) -> Tensor<T>
     where
         T: Mul<Output = T>,
-
     {
         {
             // to keep values alive
@@ -143,7 +148,7 @@ impl<T: TensorType> Tensor<T> {
             }
         }
         // call instance function
-        self.map_zip(item, |i1, i2| i1.clone() * i2.clone() );
+        self.map_zip(item, |i1, i2| i1.clone() * i2.clone());
         self.as_ref()
     }
 
@@ -151,9 +156,7 @@ impl<T: TensorType> Tensor<T> {
     where
         T: Mul<Output = T>,
     {
-       
-       Ok(self.as_ref())
-
+        Ok(self.as_ref())
     }
     pub fn iter(&self) -> TensorIterWrapper<'_, T> {
         TensorIterWrapper {
@@ -162,12 +165,11 @@ impl<T: TensorType> Tensor<T> {
     }
 }
 
-
-
 impl<T: TensorType + Display> Display for Tensor<T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
         let data = self.data.borrow();
-        let elements = data.iter()
+        let elements = data
+            .iter()
             .map(|d| d.to_string())
             .collect::<Vec<_>>()
             .join(", ");

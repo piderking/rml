@@ -14,7 +14,7 @@ pub trait TensorType: Clone {
     fn to_value(&self) -> Self;
     fn size(&self) -> Option<TensorSize>;
 
-    fn is_tensor(&self) -> bool {
+    fn is_tensor() -> bool {
         false
     }
 }

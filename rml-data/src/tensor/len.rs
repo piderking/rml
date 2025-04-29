@@ -28,8 +28,8 @@ impl<T: TensorType> TensorSizable for &dyn TensorBound<T = T> {
 
 #[derive(Debug, Clone)]
 pub struct TensorSize {
-    size: Box<[usize]>,
-    pub deep: bool,
+    pub(crate) size: Box<[usize]>,
+    pub(crate) deep: bool,
 }
 
 impl TensorSize {
