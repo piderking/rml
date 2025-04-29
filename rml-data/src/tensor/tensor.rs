@@ -1,7 +1,7 @@
 use super::error::TensorOpperationError;
 use super::len::{ActiveTensorSize, TensorSizable, TensorSize};
 use super::{error::TensorError, iterator::TensorIterWrapper, tensortype::TensorType};
-use std::fmt::Display;
+use std::fmt::{Display, Error, Formatter};
 use std::ops::{Add, Mul};
 use std::{
     cell::{Ref, RefCell},
@@ -38,6 +38,9 @@ impl<T: TensorType> Tensor<T> {
             size: ActiveTensorSize::new(data.clone()),
             data: data,
         }
+    }
+    pub fn size(&self) -> TensorSize {
+        self.size.fetch()
     }
     
     pub fn get(&self, i: usize) -> Option<T> {
@@ -161,9 +164,14 @@ impl<T: TensorType> Tensor<T> {
 
 
 
-impl<T: TensorType + Debug> Display for Tensor<T> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{:?}", self.data.borrow())
+impl<T: TensorType + Display> Display for Tensor<T> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+        let data = self.data.borrow();
+        let elements = data.iter()
+            .map(|d| d.to_string())
+            .collect::<Vec<_>>()
+            .join(", ");
+        write!(f, "[{}]", elements)
     }
 }
 

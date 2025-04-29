@@ -1,4 +1,4 @@
-use std::{cell::RefCell, marker::PhantomData, rc::Rc};
+use std::{cell::RefCell, fmt::{Display, Error, Formatter}, marker::PhantomData, rc::Rc};
 
 use super::{tensor::{Tensor, TensorBound}, tensortype::TensorType};
 
@@ -60,14 +60,25 @@ impl TensorSize {
 
 // Conversion
 
-impl From<TensorSize> for Box<[usize]>{
-    fn from(val: TensorSize) -> Self {
-        val.size
+impl From<&TensorSize> for Box<[usize]>{
+    fn from(val: &TensorSize) -> Self {
+        val.clone().size
     }
 }
 impl Into<TensorSize> for Box<[usize]>{
     fn into(self) -> TensorSize {
         TensorSize::new( self )
+    }
+}
+
+// Display
+impl Display for TensorSize {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
+        let elements = self.size.iter()
+            .map(|d| d.to_string())
+            .collect::<Vec<_>>()
+            .join(", ");
+        write!(f, "[{}]", elements)
     }
 }
 

@@ -1,4 +1,4 @@
-use std::cell::BorrowMutError;
+use std::{cell::BorrowMutError, fmt::Error};
 
 use thiserror::Error;
 
@@ -12,6 +12,8 @@ pub enum TensorError {
     OverflowMaxIndex { index: usize, max_index: usize },
     #[error("data store disconnected")]
     BorrowMutError(#[from] BorrowMutError),
+    #[error("error formatting")]
+    DisplayWrite(#[from] Error),
     #[error("unknown data store error")]
     Unknown,
 }

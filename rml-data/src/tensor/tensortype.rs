@@ -1,4 +1,4 @@
-use super::tensor::{Tensor, TensorBound};
+use super::{len::TensorSize, tensor::{Tensor, TensorBound}};
 
 // Trait Bound for primitives and objects
 // Bind the types that can be tensorable
