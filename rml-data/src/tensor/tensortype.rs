@@ -1,4 +1,7 @@
-use super::{len::TensorSize, tensor::{Tensor, TensorBound}};
+use super::{
+    len::TensorSize,
+    tensor::{Tensor, TensorBound},
+};
 
 // Trait Bound for primitives and objects
 // Bind the types that can be tensorable
@@ -9,16 +12,15 @@ pub trait TensorType: Clone {
 
     fn default() -> Self;
     fn to_value(&self) -> Self;
-    fn to_tensor(&self) -> Self::Result;
+    fn size(&self) -> Option<TensorSize>;
+
     fn is_tensor(&self) -> bool {
         false
-    } 
+    }
 }
 pub trait Tensorable {
     type Result;
 }
-
-
 
 impl TensorType for i32 {
     type Result = Tensor<i32>;
@@ -30,8 +32,8 @@ impl TensorType for i32 {
         *self
     }
 
-    fn to_tensor(&self) -> Self::Result {
-        Tensor::new(vec![*self])
+    fn size(&self) -> Option<TensorSize> {
+        Option::None
     }
 }
 
@@ -44,12 +46,12 @@ impl TensorType for f32 {
     fn to_value(&self) -> Self {
         *self
     }
-    fn to_tensor(&self) -> Self::Result {
-        Tensor::new(vec![*self])
+    fn size(&self) -> Option<TensorSize> {
+        Option::None
     }
 }
 
-impl <T: TensorType> TensorType for Tensor<T> {
+impl<T: TensorType> TensorType for Tensor<T> {
     type Result = Tensor<T>;
 
     fn default() -> Self {
@@ -58,11 +60,10 @@ impl <T: TensorType> TensorType for Tensor<T> {
     fn to_value(&self) -> Self {
         self.as_ref()
     }
-    fn to_tensor(&self) -> Self::Result {
-        self.as_ref()
+    fn size(&self) -> Option<TensorSize> {
+        Option::Some(self.size())
     }
 }
-
 
 impl<'a> TensorType for &'a str {
     type Result = Tensor<&'a str>;
@@ -73,7 +74,7 @@ impl<'a> TensorType for &'a str {
     fn to_value(&self) -> Self {
         self
     }
-    fn to_tensor(&self) -> Self::Result {
-        Tensor::new(vec![self])
+    fn size(&self) -> Option<TensorSize> {
+        Option::None
     }
 }
