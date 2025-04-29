@@ -1,4 +1,5 @@
-use rml_data::tensor::tensor::Tensor;
+use rml_data::tensor::{self, tensor::Tensor};
+use rml_data::tensorm;
 
 pub fn main() {
     let mut d: Tensor<i32> = Tensor::new(vec![1, 2, 3]);
@@ -13,6 +14,6 @@ pub fn main() {
             Tensor::new(vec![4]),
         ])]),
     ]);
-    println!("{:}", a);
-    println!("{:?}", a.size())
+    let p = tensorm![tensorm![1, 1], tensorm![1, 1], tensorm![1, 1]];
+    println!("{:}", p)
 }
