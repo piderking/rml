@@ -1,6 +1,6 @@
-use super::{error::TensorError, iterator::TensorVecWrapper, tensorable::Tensorable};
-use itertools::EitherOrBoth::{Both, Left, Right};
-use itertools::Itertools;
+use super::error::TensorOpperationError;
+use super::len::{ActiveTensorSize, TensorSizable, TensorSize};
+use super::{error::TensorError, iterator::TensorIterWrapper, tensortype::TensorType};
 use std::fmt::Display;
 use std::ops::{Add, Mul};
 use std::{
@@ -9,43 +9,40 @@ use std::{
     rc::Rc,
 };
 
+
+
 pub trait TensorBound {
-    type T: Tensorable;
-    fn to_tensor(&self) -> &Tensor<Self::T>;
+    type T: TensorType; // Resulting Value 
+    fn size (&self) -> TensorSize;
 }
 
-impl<T: Tensorable> TensorBound for Tensor<T> {
-    type T = T;
 
-    fn to_tensor(&self) -> &Tensor<Self::T> {
-        return self;
-    }
-}
 
-#[derive(Debug)]
-pub struct Tensor<T: Tensorable> {
+
+
+#[derive(Debug, Clone)]
+pub struct Tensor<T: TensorType> {
     //* Wrapper Class for Vectors with Trait Bounds */
     #[allow(dead_code)]
     pub(crate) data: Rc<RefCell<Vec<T>>>,
+    size: ActiveTensorSize<T>,
 }
 
-impl<T: Tensorable> Tensor<T> {
-    pub fn new(data: Vec<T>) -> Tensor<T> {
-        // check for the size to be identical
-        Tensor {
-            data: Rc::new(RefCell::new(data)),
-        }
-    }
-    pub fn len(&self) -> usize {
-        self.data.borrow().len()
+impl<T: TensorType> Tensor<T> {
+    pub fn new(data: Vec<T>) -> Tensor<T>{
+        Tensor::from(Rc::new(RefCell::new(data)))
     }
     pub fn from(data: Rc<RefCell<Vec<T>>>) -> Tensor<T> {
         // check for the size to be identical
-        Tensor { data }
+        Tensor {
+            size: ActiveTensorSize::new(data.clone()),
+            data: data,
+        }
     }
+    
     pub fn get(&self, i: usize) -> Option<T> {
         match self.get_data_ref().get(i) {
-            Option::Some(n) => Option::Some(*n),
+            Option::Some(n) => Option::Some(n.clone()),
             Option::None => Option::None,
         }
     }
@@ -118,13 +115,14 @@ impl<T: Tensorable> Tensor<T> {
             }
         }
         // call instance function
-        self.map_zip(item, |i1, i2| *i1 + *i2);
+        self.map_zip(item, |i1, i2| i1.clone() + i2.clone());
         self.as_ref()
     }
 
-    pub fn dot(&mut self, item: Tensor<T>) -> Tensor<T>
+    pub fn combine_mul(&mut self, item: Tensor<T>) -> Tensor<T>
     where
         T: Mul<Output = T>,
+
     {
         {
             // to keep values alive
@@ -142,24 +140,28 @@ impl<T: Tensorable> Tensor<T> {
             }
         }
         // call instance function
-        self.map_zip(item, |i1, i2| *i1 * *i2);
+        self.map_zip(item, |i1, i2| i1.clone() * i2.clone() );
         self.as_ref()
     }
 
-    pub fn iter(&self) -> TensorVecWrapper<'_, T> {
-        TensorVecWrapper {
+    pub fn dot(&mut self, item: Tensor<T>) -> Result<Tensor<T>, TensorOpperationError>
+    where
+        T: Mul<Output = T>,
+    {
+       
+       Ok(self.as_ref())
+
+    }
+    pub fn iter(&self) -> TensorIterWrapper<'_, T> {
+        TensorIterWrapper {
             r: self.data.borrow(),
         }
     }
 }
 
-impl<T: Tensorable> From<Vec<T>> for Tensor<T> {
-    fn from(value: Vec<T>) -> Self {
-        Tensor::new(value)
-    }
-}
 
-impl<T: Tensorable + Debug> Display for Tensor<T> {
+
+impl<T: TensorType + Debug> Display for Tensor<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{:?}", self.data.borrow())
     }

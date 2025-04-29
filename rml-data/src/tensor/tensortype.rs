@@ -2,15 +2,25 @@ use super::tensor::{Tensor, TensorBound};
 
 // Trait Bound for primitives and objects
 // Bind the types that can be tensorable
-pub trait Tensorable: Copy {
-    type Result: TensorBound;
+
+pub trait Combine {}
+pub trait TensorType: Clone {
+    type Result;
 
     fn default() -> Self;
     fn to_value(&self) -> Self;
     fn to_tensor(&self) -> Self::Result;
+    fn is_tensor(&self) -> bool {
+        false
+    } 
+}
+pub trait Tensorable {
+    type Result;
 }
 
-impl Tensorable for i32 {
+
+
+impl TensorType for i32 {
     type Result = Tensor<i32>;
 
     fn default() -> Self {
@@ -25,7 +35,7 @@ impl Tensorable for i32 {
     }
 }
 
-impl Tensorable for f32 {
+impl TensorType for f32 {
     type Result = Tensor<f32>;
 
     fn default() -> Self {
@@ -39,7 +49,22 @@ impl Tensorable for f32 {
     }
 }
 
-impl<'a> Tensorable for &'a str {
+impl <T: TensorType> TensorType for Tensor<T> {
+    type Result = Tensor<T>;
+
+    fn default() -> Self {
+        Tensor::new(vec![])
+    }
+    fn to_value(&self) -> Self {
+        self.as_ref()
+    }
+    fn to_tensor(&self) -> Self::Result {
+        self.as_ref()
+    }
+}
+
+
+impl<'a> TensorType for &'a str {
     type Result = Tensor<&'a str>;
 
     fn default() -> Self {
