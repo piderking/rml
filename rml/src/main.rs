@@ -1,4 +1,4 @@
-use rml_data::tensor::{self, tensor::Tensor};
+use rml_data::tensor::tensor::Tensor;
 use rml_data::tensorm;
 
 pub fn main() {
@@ -15,5 +15,9 @@ pub fn main() {
         ])]),
     ]);
     let p = tensorm![tensorm![1, 1], tensorm![1, 1], tensorm![1, 1]];
+
+    
+    
+
     println!("{:}", p)
 }

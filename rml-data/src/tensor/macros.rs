@@ -5,5 +5,6 @@ macro_rules! tensorm {
             Tensor::new(
                 vec![$($x),*]
             )
-        };
+        }; 
+        
     }
