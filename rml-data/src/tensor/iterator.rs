@@ -3,13 +3,13 @@ use std::{
     slice::{Iter, IterMut},
 };
 
-use super::{tensor::Tensor, tensortype::TensorType};
+use super::{dtype::dtype, tensor::Tensor};
 
 // -------------------------
-pub struct TensorIterWrapper<'a, T: TensorType + 'a> {
+pub struct TensorIterWrapper<'a, T: dtype + 'a> {
     pub r: Ref<'a, Vec<T>>,
 }
-impl<'a, 'b: 'a, T: TensorType + 'a> IntoIterator for &'b TensorIterWrapper<'a, T> {
+impl<'a, 'b: 'a, T: dtype + 'a> IntoIterator for &'b TensorIterWrapper<'a, T> {
     type IntoIter = Iter<'a, T>;
     type Item = &'a T;
 
@@ -19,7 +19,7 @@ impl<'a, 'b: 'a, T: TensorType + 'a> IntoIterator for &'b TensorIterWrapper<'a, 
 }
 
 // and we'll implement FromIterator
-impl<T: TensorType> FromIterator<T> for Tensor<T> {
+impl<T: dtype> FromIterator<T> for Tensor<T> {
     fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Self {
         let t: Vec<T> = iter.into_iter().collect();
         t.into()

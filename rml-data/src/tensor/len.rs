@@ -1,17 +1,17 @@
 use std::{
     cell::RefCell,
     fmt::{Display, Error, Formatter},
-    marker::PhantomData,
     ops::Add,
     rc::Rc,
 };
 
 use super::{
+    dtype::dtype,
     tensor::{Tensor, TensorBound},
-    tensortype::TensorType,
 };
 
 pub trait TensorSizable {
+    #[allow(dead_code)]
     fn to_size(&self) -> TensorSize;
 }
 
@@ -20,15 +20,16 @@ impl<T> TensorSizable for Vec<T> {
         TensorSize::new(Box::new([self.len()]))
     }
 }
-impl<T: TensorType> TensorSizable for &dyn TensorBound<T = T> {
+/*impl<T: dtype> TensorSizable for &dyn TensorBound<T = T> {
     fn to_size(&self) -> TensorSize {
-        self.size()
+        self.size
     }
-}
+} */
 
 #[derive(Debug, Clone)]
 pub struct TensorSize {
     pub(crate) size: Box<[usize]>,
+    #[allow(dead_code)]
     pub(crate) deep: bool,
 }
 
@@ -39,7 +40,7 @@ impl TensorSize {
             size: t,
         }
     }
-    pub fn from<U, T: TensorType<Result = U>>(t: Tensor<T>) -> TensorSize where {
+    pub fn from<T: dtype>(t: Tensor<T>) -> TensorSize where {
         /*
              deep: match t.data.borrow().get(0){
             Some(n) => n.is_tensor(),
@@ -96,11 +97,11 @@ impl Display for TensorSize {
 // Living Tensor Size
 #[allow(dead_code)]
 #[derive(Debug, Clone)]
-pub struct ActiveTensorSize<T: TensorType> {
+pub struct ActiveTensorSize<T: dtype> {
     data: Rc<RefCell<Vec<T>>>,
 }
 
-impl<T: TensorType> ActiveTensorSize<T> {
+impl<T: dtype> ActiveTensorSize<T> {
     pub fn new(t: Rc<RefCell<Vec<T>>>) -> ActiveTensorSize<T> {
         ActiveTensorSize { data: t.clone() }
     }

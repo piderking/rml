@@ -3,9 +3,9 @@ use std::{cell::BorrowMutError, fmt::Error};
 use thiserror::Error;
 
 use super::{
+    dtype::dtype,
     len::TensorSize,
     tensor::{Tensor, TensorBound},
-    tensortype::TensorType,
 };
 
 #[derive(Error, Debug)]

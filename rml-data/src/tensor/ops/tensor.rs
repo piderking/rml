@@ -1,31 +1,27 @@
 use std::ops::{Add, Div, Mul, Sub};
 
-use crate::tensor::error::TensorOpperationError;
+use crate::tensor::{error::TensorOpperationError, shape::shallow::Shallow, traits::dtype::dtype};
 
-use super::super::{tensor::Tensor, tensortype::TensorType};
+macro_rules! tensor_op {
+    ($trait:ty, $i:path) => {
+        // combine together the two tensors
+        impl<T> $trait<Shallow<T>> for Shallow<T>
+        where
+            T: dtype,
+            Shallow<T>: Add<T, Output = Shallow<T>>,
+            T: $trait<T, Output = T>,
+        {
+            type Output = Shallow<T>;
 
-// combine together the two tensors
-impl<T> Add<Tensor<T>> for Tensor<T>
-where
-    T: TensorType,
-    T: Add<Output = T>,
-{
-    type Output = Result<Tensor<T>, TensorOpperationError>;
-
-    fn add(mut self, rhs: Tensor<T>) -> Self::Output {
-        Ok(self.combine(rhs))
-    }
+            fn add(mut self, rhs: Shallow<T>) -> Self::Output {
+                self.$i(rhs)
+            }
+        }
+    };
 }
 
-// combine together the two tensors
-impl<T> Mul<Tensor<T>> for Tensor<T>
-where
-    T: TensorType,
-    T: Mul<Output = T>,
+tensor_op!(Add, combine);
+/*
 {
-    type Output = Result<Tensor<T>, TensorOpperationError>;
-
-    fn mul(mut self, rhs: Tensor<T>) -> Self::Output {
-        self.dot(rhs)
-    }
-}
+                self.combine(rhs)
+            } */

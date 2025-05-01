@@ -8,10 +8,7 @@ impl PartialEq for TensorSize {
                 .size
                 .iter()
                 .zip(other.size.iter())
-                .filter(|(v1, v2)| {
-                    print!("{:} != {:}", v1, v2);
-                    v1 != v2
-                })
+                .filter(|(v1, v2)| v1 != v2)
                 .count())
                 <= 0
         } else {
