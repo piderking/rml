@@ -1,5 +1,5 @@
-use std::ops::{Add, Mul};
 use super::super::traits::dtype::dtype;
+use std::ops::{Add, Div, Mul, RangeTo};
 macro_rules! ops {
     /*
        ($i: ident) => {
@@ -7,39 +7,62 @@ macro_rules! ops {
             type Output: Clone;
         }
     }; */
-    (trait $i: ident, ($($tt:tt),*), 
+    (trait $i: ident ($($tt:tt),*),
     ($(
-        fn $fn_name:ident(&$self_ident:ident, $($arg:ident),* ) $body:block
+        fn $fn_name:ident(&$self_ident:ident$(, $arg:ident),* ) $body:block
     )*)
-   
+
+
     ) => {
-        pub trait $i 
-        
-        where 
-        <Self as $i>::Output: dtype,
+        pub trait $i
+
+        where
+        Self: Sized + Clone,
+        Self: dtype,
         $(
-            <Self as $i>::Output: $tt<<Self as $i>::Output>,
-            for <'a> &'a Self: $tt<<Self as $i>::Output, Output=<Self as $i>::Output>
-        ),*,
+            Self:$tt<Self, Output = Self>,
+        )*
         {
-            type Output: Clone;
-            
+
             $(
-                fn $fn_name(&$self_ident, $($arg: <Self as $i>::Output),*) -> <Self as $i>::Output { //<Self as $i>::Output
+                fn $fn_name(&$self_ident, $($arg: Self),*) -> Self { //<Self as $i>::Output
                     $body
                 }
             )*
-           
+
+            fn from_f32(t: f32) -> Self;
+
+
+
         }
+
+        impl $i for f32 {
+            fn from_f32(t: f32) -> Self {
+                t
+            }
+        }
+
+
     };
-   
-    
-    
+
+
+
 }
 
-ops!(trait Power, (Mul), (
-    fn raise(&self, i, t) {
-        for _n in ..t {}
-        self.mul(i)
-    }
-));
+ops!(trait Power (Mul), (
+    fn raise(&self, i){
+        let mut t = self.clone();
+        for _ in 0.. {
+            t = t.mul(i.clone());
+        }
+        t
+    })
+);
+
+use std::f32::consts::E;
+
+ops!(trait Sigmoid (Mul, Div), (
+    fn sigmoid(&self){
+        Self::from_f32((1.0)/(1.0+E.powf(-1.0*self.clone().as_f32())))
+    })
+);
