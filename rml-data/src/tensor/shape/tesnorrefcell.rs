@@ -1,3 +1,4 @@
+use crate::tensor::iterator::ShallowIterWrapper;
 use crate::tensor::traits::dtype::dtype;
 
 use super::super::error::{TensorOpperationError, TensorSizeError};
@@ -13,50 +14,46 @@ use std::{
 };
 
 #[derive(Debug, Clone)]
-pub struct Shallow<T>
+pub struct TensorRefCell<T>
 where
     T: dtype + dtypeops,
 {
     //* Wrapper Class for Vectors with Trait Bounds */
     #[allow(dead_code)]
     pub(crate) data: Rc<RefCell<Vec<T>>>,
-    size: ActiveTensorSize<T>,
 }
 
-impl<T> Shallow<T>
+impl<T> TensorRefCell<T>
 where
     T: dtype + dtypeops,
 {
-    pub fn new_check(data: Vec<T>) -> Result<Shallow<T>, TensorSizeError> {
+    pub fn new_check(data: Vec<T>) -> Result<TensorRefCell<T>, TensorSizeError> {
         if T::is_tensor() && !data.get(0).is_none() {
             let size = data.get(0).unwrap().size().unwrap();
             if data.iter().filter(|e| size != e.size().unwrap()).count() > 0 {
                 Err(TensorSizeError::InvalidSize { t1: size })
             } else {
-                Ok(Shallow::from(Rc::new(RefCell::new(data))))
+                Ok(TensorRefCell::from(Rc::new(RefCell::new(data))))
             }
         } else {
-            Ok(Shallow::from(Rc::new(RefCell::new(data))))
+            Ok(TensorRefCell::from(Rc::new(RefCell::new(data))))
         }
     }
 
     #[warn(clippy::panic)]
-    pub fn new(data: Vec<T>) -> Shallow<T> {
+    pub fn new(data: Vec<T>) -> TensorRefCell<T> {
         match Self::new_check(data) {
             Ok(f) => f,
             Err(e) => panic!("{e}"),
         }
     }
-    pub fn from(data: Rc<RefCell<Vec<T>>>) -> Shallow<T> {
+    pub fn from(data: Rc<RefCell<Vec<T>>>) -> TensorRefCell<T> {
         // check for the size to be identical
-        Shallow {
-            size: ActiveTensorSize::new(data.clone()),
+        TensorRefCell {
             data: data,
         }
     }
-    pub fn size(&self) -> TensorSize {
-        self.size.fetch()
-    }
+    
     pub fn get(&self, i: usize) -> Option<T> {
         match self.get_data_ref().get(i) {
             Option::Some(n) => Option::Some(n.clone()),
@@ -76,9 +73,9 @@ where
         l
     }
 
-    pub fn as_ref(&self) -> Shallow<T> {
+    pub fn as_ref(&self) -> TensorRefCell<T> {
         // still pointing to the same data
-        Shallow::from(self.data.clone())
+        TensorRefCell::from(self.data.clone())
     }
 
     pub fn get_data_ref(&self) -> Ref<'_, Vec<T>> {
@@ -93,7 +90,7 @@ where
         self.as_ref()
     }
 
-    pub fn map_zip<F: FnMut(&mut T, &T) -> T>(&mut self, item: Shallow<T>, mut f: F) -> Self {
+    pub fn map_zip<F: FnMut(&mut T, &T) -> T>(&mut self, item: TensorRefCell<T>, mut f: F) -> Self {
         let mut t = self.data.borrow_mut();
         let o = item.data.borrow();
 
@@ -103,16 +100,16 @@ where
         self.as_ref()
     }
 
-    pub fn push(&mut self, t: T) -> Shallow<T> {
+    pub fn push(&mut self, t: T) -> TensorRefCell<T> {
         self.data.borrow_mut().push(t);
         self.as_ref()
     }
-    pub fn insert(&mut self, i: usize, t: T) -> Shallow<T> {
+    pub fn insert(&mut self, i: usize, t: T) -> TensorRefCell<T> {
         self.data.borrow_mut().insert(i, t);
         self.as_ref()
     }
 
-    pub fn combine(&mut self, item: Shallow<T>) -> Shallow<T>
+    pub fn combine(&mut self, item: TensorRefCell<T>) -> TensorRefCell<T>
     where
         T: Add<Output = T>,
     {
@@ -136,7 +133,7 @@ where
         self.as_ref()
     }
 
-    pub fn combine_sub(&mut self, item: Shallow<T>) -> Shallow<T>
+    pub fn combine_sub(&mut self, item: TensorRefCell<T>) -> TensorRefCell<T>
     where
         T: Sub<Output = T>,
     {
@@ -160,7 +157,7 @@ where
         self.as_ref()
     }
 
-    pub fn combine_mul(&mut self, item: Shallow<T>) -> Shallow<T>
+    pub fn combine_mul(&mut self, item: TensorRefCell<T>) -> TensorRefCell<T>
     where
         T: Mul<Output = T>,
     {
@@ -183,7 +180,7 @@ where
         self.map_zip(item, |i1, i2| i1.clone() * i2.clone());
         self.as_ref()
     }
-    pub fn combine_div(&mut self, item: Shallow<T>) -> Shallow<T>
+    pub fn combine_div(&mut self, item: TensorRefCell<T>) -> TensorRefCell<T>
     where
         T: Div<Output = T>,
     {
@@ -207,21 +204,21 @@ where
         self.as_ref()
     }
 
-    pub fn dot(&mut self, item: Shallow<T>) -> Result<Shallow<T>, TensorOpperationError>
+    pub fn dot(&mut self, item: TensorRefCell<T>) -> Result<TensorRefCell<T>, TensorOpperationError>
     where
         T: Mul<Output = T>,
     {
         Ok(self.as_ref())
     }
-    /*
-    pub fn iter(&self) -> TensorIterWrapper<'_, T> {
-        TensorIterWrapper {
+    
+    pub fn iter(&self) -> ShallowIterWrapper<'_, T> {
+        ShallowIterWrapper {
             r: self.data.borrow(),
         }
-    } */
+    } 
 }
 
-impl<T: dtype + Display> Display for Shallow<T> {
+impl<T: dtype + Display> Display for TensorRefCell<T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
         let data = self.data.borrow();
         let elements = data

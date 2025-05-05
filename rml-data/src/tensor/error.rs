@@ -2,11 +2,8 @@ use std::{cell::BorrowMutError, fmt::Error};
 
 use thiserror::Error;
 
-use super::{
-    dtype::dtype,
-    len::TensorSize,
-    tensor::{Tensor, TensorBound},
-};
+use super::len::TensorSize;
+
 
 #[derive(Error, Debug)]
 pub enum TensorError {

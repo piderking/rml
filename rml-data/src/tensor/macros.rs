@@ -2,7 +2,8 @@
 macro_rules! tensorm {
         //($x:expr, $($y:expr),+)
         [$($x:expr),*] => {
-            Tensor::new(
+             
+            Tensor::from(
                 vec![$($x),*]
             )
         };

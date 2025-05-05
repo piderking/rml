@@ -1,33 +1,46 @@
 use std::{marker::PhantomData, ops::Add};
 
-use crate::tensor::{ops::dtype::dtypeops, shape::shallow::Shallow};
+
+use crate::tensor::ops::dtype::dtypeops;
 
 use super::super::len::TensorSize;
 
 // Trait Bound for primitives and objects
 // Bind the types that can be tensorable
 
-pub trait Combine {}
+trait Primitive {
+    fn into_i32(&self) -> i32;
+}
 
-//dtypeops!(f32);
+macro_rules! convert {
+    ($ty:ty, $self_ident:ident, $body:block) => {
+        impl Primitive for $ty {
+            fn into_i32(&$self_ident) -> i32 {
+                $body
+            }
+        }
+    };
+}
+
 
 #[allow(non_camel_case_types)]
 pub trait dtype: dtypeops
 where
+    Self: Primitive,
     Self: Add<Self, Output = Self>,
 {
     fn default() -> Self;
     fn to_value(&self) -> Self;
-    fn size(&self) -> Option<TensorSize>;
-    fn is_tensor() -> bool {
-        false
-    }
+
 }
 
 
 // Trait Defintion for Basic Numbers
 macro_rules! dtype {
     ($ty:ty, $val:expr) => {
+
+
+
         impl dtype for $ty {
             fn default() -> Self {
                 $val
@@ -36,20 +49,16 @@ macro_rules! dtype {
                 *self
             }
 
-            fn size(&self) -> Option<TensorSize> {
-                Option::None
-            }
         }
     };
 }
 
-impl<T> dtypeops for Shallow<T>
-where
-    T: dtype,
-    T: Add<T>,
-{
-    type Input = T;
-}
+convert!(f32, self, {
+    *self as i32
+});
+convert!(i32, self, {
+    *self
+});
 
 dtype!(i32, 0);
 dtype!(f32, 0.0);

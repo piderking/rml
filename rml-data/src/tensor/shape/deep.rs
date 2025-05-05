@@ -10,23 +10,29 @@ where
     T: TensorBound,
 {
     #[allow(dead_code)]
-    pub(crate) data: Vec<T>,
+    pub(crate) data: Vec<T::inner>,
 }
+
 
 impl<T> Deep<T>
 where
     T: TensorBound,
 {
-    pub fn new(data: Vec<T>) {
+    pub fn new(data: Vec<T::inner>) -> Self{
         Deep { data }
     }
+
+    pub fn get(&self, i: usize) -> Option<&T::inner> {
+        self.data.get(i)
+    } 
 }
 
 // Display All of Body
-impl<T: TensorBound> Display for Deep<T> {
+impl<T: TensorBound> Display for Deep<T> 
+where T::inner: Display
+{
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-        let data = self.data.borrow();
-        let elements = data
+        let elements = self.data
             .iter()
             .map(|d| d.to_string())
             .collect::<Vec<_>>()

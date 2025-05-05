@@ -1,22 +1,24 @@
-use super::{
-    shape::{deep::Deep, shallow::Shallow},
-    traits::{dtype::dtype, tensor::TensorBound},
-};
+use super::{shape::tensor::Tensor, shape::tensor::MutTensor, traits::dtype::dtype};
 
-impl<T: TensorBound> From<Vec<T>> for Deep<T> {
+/// Vec -> Tensor
+impl <T: dtype> From<Vec<T>> for Tensor<'_, T> {
     fn from(value: Vec<T>) -> Self {
-        Deep::new(value)
+        Tensor::from(value)
     }
 }
 
-impl<T: dtype> From<Vec<T>> for Shallow<T> {
-    fn from(value: Vec<T>) -> Self {
-        Shallow::new(value)
+///  Tensor -> Tensor Mut
+impl <'a, T: dtype> Into<MutTensor<'a, T>> for Tensor<'a, T> {
+    fn into(self) -> MutTensor<'a, T> {
+        MutTensor::from(self)
     }
 }
 
-impl<T: dtype> From<&[T]> for Shallow<T> {
-    fn from(value: &[T]) -> Self {
-        value.into() // converts it into a vec --> converts it into a Shallow
+///  Tensor -> Tensor Mut
+/// TensorMut -> Tensor
+impl <'a, T: dtype> Into<Tensor<'a, T>> for MutTensor<'a, T> {
+    fn into(self) -> Tensor<'a, T> {
+        self.0.to_owned()
     }
 }
+

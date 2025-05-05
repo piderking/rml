@@ -1,6 +1,5 @@
 mod conv;
 pub mod error;
-pub mod iterator;
 mod len;
 pub mod macros;
 pub mod ops;
