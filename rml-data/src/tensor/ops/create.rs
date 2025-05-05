@@ -7,7 +7,7 @@ macro_rules! ops {
             type Output: Clone;
         }
     }; */
-    (trait $i: ident ($($tt:tt),*),
+    (trait $i: ident ($($tt:tt$(<$($genric:ty),*>)?),*),
     ($(
         fn $fn_name:ident(&$self_ident:ident$(, $arg:ident),* ) $body:block
     )*)
@@ -20,7 +20,7 @@ macro_rules! ops {
         Self: Sized + Clone,
         Self: dtype,
         $(
-            Self:$tt<Self, Output = Self>,
+            Self:$tt<$($($genric,)*)? Output = Self>,
         )*
         {
 
@@ -31,9 +31,6 @@ macro_rules! ops {
             )*
 
             fn from_f32(t: f32) -> Self;
-
-
-
         }
 
         impl $i for f32 {
@@ -49,13 +46,9 @@ macro_rules! ops {
 
 }
 
-ops!(trait Power (Mul), (
-    fn raise(&self, i){
-        let mut t = self.clone();
-        for _ in 0.. {
-            t = t.mul(i.clone());
-        }
-        t
+ops!(trait Power (Mul<Self>), (
+    fn pow(&self, i){
+        Self::from_f32(self.as_f32().powf(i.as_f32()))
     })
 );
 
@@ -77,7 +70,8 @@ ops!(trait Relu (), (
     })
 );
 
-//(e^x - e^-x) / (e^x + e^-x)
+// TanH
+// (e^x - e^-x) / (e^x + e^-x)
 ops!(trait TanH (), (
     fn tanh(&self){
         let t = self.clone().as_f32();
@@ -87,7 +81,8 @@ ops!(trait TanH (), (
 
 // Other Impl
 impl Sigmoid for i32 {
+    // Conversion Factor
     fn from_f32(t: f32) -> Self {
-        t as i32
+        t as i32 // easy downcast
     }
 }
