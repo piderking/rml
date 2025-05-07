@@ -1,10 +1,28 @@
-use core::panic;
 use std::ops::{Add, Div, Mul, Sub};
 
-use crate::tensor::traits::{dtype::dtype, tensor::TensorBound};
+use crate::tensor::{shape::tensor::Tensor, traits::{dtype::dtype, tensor::TensorBound}};
 
-use super::dtype::dtypeops;
+use super::{create::Sigmoid, dtype::dtypeops};
 
-macro_rules! tensor_ops {
-    () => {};
+
+
+
+
+
+impl <T: dtype> Div<T> for Tensor<'_, T> {
+    type Output = Self;
+
+    fn div(self, rhs: T) -> Self::Output {
+        todo!()
+    }
 }
+impl <T: dtype> Mul<T> for Tensor<'_, T> {
+    type Output = Self;
+
+    fn mul(self, rhs: T) -> Self::Output {
+        todo!()
+    }
+}
+
+
+

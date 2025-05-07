@@ -1,51 +1,17 @@
 use super::super::traits::dtype::dtype;
 use std::ops::{Add, Div, Mul, RangeTo};
-macro_rules! ops {
-    /*
-       ($i: ident) => {
-        pub trait $i  {
-            type Output: Clone;
-        }
-    }; */
-    (trait $i: ident ($($tt:tt$(<$($genric:ty),*>)?),*),
-    ($(
-        fn $fn_name:ident(&$self_ident:ident$(, $arg:ident),* ) $body:block
-    )*)
 
 
-    ) => {
-        pub trait $i
+    
+/*
+pub trait Sigmoid <T: dtype, Output = T / dtype >
 
-        where
-        Self: Sized + Clone,
-        Self: dtype,
-        $(
-            Self:$tt<$($($genric,)*)? Output = Self>,
-        )*
-        {
-
-            $(
-                fn $fn_name(&$self_ident, $($arg: Self),*) -> Self { //<Self as $i>::Output
-                    $body
-                }
-            )*
-
-            fn from_f32(t: f32) -> Self;
-        }
-
-        impl $i for f32 {
-            fn from_f32(t: f32) -> Self {
-                t
-            }
-        }
-
-
-    };
+*/
 
 
 
-}
 
+/*
 ops!(trait Power (Mul<Self>), (
     fn pow(&self, i){
         Self::from_f32(self.as_f32().powf(i.as_f32()))
@@ -54,11 +20,7 @@ ops!(trait Power (Mul<Self>), (
 
 use std::f32::consts::E;
 
-ops!(trait Sigmoid (Mul, Div), (
-    fn sigmoid(&self){
-        Self::from_f32((1.0)/(1.0+E.powf(-1.0*self.as_f32())))
-    })
-);
+
 
 ops!(trait Relu (), (
     fn relu(&self){
@@ -77,12 +39,72 @@ ops!(trait TanH (), (
         let t = self.clone().as_f32();
         Self::from_f32((E.powf(t) - E.powf(-1.0 * t))/(E.powf(t) + E.powf(-1.0 * t)))
     })
-);
+); */
 
 // Other Impl
-impl Sigmoid for i32 {
-    // Conversion Factor
-    fn from_f32(t: f32) -> Self {
-        t as i32 // easy downcast
-    }
+
+
+
+
+// T$(:$($con:tt)+*)?
+macro_rules! op {
+    /*
+    (fn $fn:ident (&$self_ident:ident $(, $arg:ident: $arg_ty:ty)*) -> $ret:ty $(where $($where:ty:$wherer:tt)+)?) => {
+        fn $fn(&$self_ident, $( $arg: $arg_ty ),*) -> $ret $(where $($where:$wherer),+)?;
+    };
+
+    (fn $fn:ident (&$self_ident:ident $(, $arg:ident: $arg_ty:ty)*) -> $ret:ty $(where $($where:ty:$wherer:tt)+)? $body: block) => {
+        fn $fn(&$self_ident, $( $arg: $arg_ty ),*) -> $ret $(where $($where:$wherer),+)? $body
+    };
+     */
+($name: ident<T$(:$($con:tt),*)?> {$($i:item)*}) => {
+        pub trait $name <T: Clone $($(+ $con)*)?> 
+        // Trait Bounds For SElf
+        {
+            // No Trait Bonds on rest
+            type Output: Clone;
+            $($i)*
+        }
+    };
+     ($name:ident {$($i:item)*}) => {
+        pub trait $name
+        {
+            // No Trait Bonds on rest
+            type Output: Clone;
+            $($i)*
+        }
+    };
+    ($name: ident<T$(:$($con:tt),*)?> {$($i:item)*}) => {
+        pub trait $name <T: Clone $($(+ $con)*)?> 
+        {
+            // No Trait Bonds on rest
+            type Output: Clone;
+            $($i)*
+        }
+    };
+    ($name: ident<T:$($con:tt),*><Output = $($assoc:tt),*>) => {
+        pub trait $name <T: Clone $(+ $con)*> 
+        {
+            // No Trait Bounds on rest
+            type Output: Clone $(+ $assoc)*;
+        }
+    };
+    
 }
+
+op!(Sigmoid {
+    fn sigmoid(&self) -> Self::Output;
+});
+
+
+impl <T:dtype> Sigmoid for T {
+    type Output = T;
+
+    fn sigmoid(&self) -> Self::Output {
+        Self::Output::from_f32((1.0)/(1.0+E.powf(-1.0*self.as_f32())))
+    }
+    
+    
+}
+
+

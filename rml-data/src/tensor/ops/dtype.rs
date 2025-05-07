@@ -11,6 +11,7 @@ where
     Self::Input: Mul<Self::Input, Output = Self::Input>,
     Self::Input: Div<Self::Input, Output = Self::Input>,
     Self::Input: Sigmoid,
+
 {
     type Input;
 }
