@@ -1,32 +1,37 @@
-
-
-use std::{  fmt::{Display, Formatter, Error}, marker::PhantomData, slice::{Iter, IterMut}};
+use std::{
+    fmt::{Display, Error, Formatter},
+    marker::PhantomData,
+    slice::{Iter, IterMut},
+};
 
 use crate::tensor::traits::dtype::dtype;
 
-
-
-
 // Standard 1 Dimensional
 #[derive(Debug, Clone)]
-pub struct Tensor <'a, T: dtype> {
+pub struct Tensor<'a, T: dtype> {
     data: Vec<T>,
-    phn: PhantomData<&'a T>
+    phn: PhantomData<&'a T>,
 }
-impl <T> Tensor<'_, T> where T: dtype  {
+impl<T> Tensor<'_, T>
+where
+    T: dtype,
+{
     pub fn new(data: &[T]) -> Self {
-        Tensor { data: data.into(), phn: PhantomData }
+        Tensor {
+            data: data.into(),
+            phn: PhantomData,
+        }
     }
     pub fn from(data: Vec<T>) -> Self {
-        Tensor { data, phn: PhantomData }
+        Tensor {
+            data,
+            phn: PhantomData,
+        }
     }
     pub fn len(&self) -> usize {
         self.data.len()
     }
-    
-    
 }
-
 
 // Implement Itterator
 impl<'a, 'b: 'a, T: dtype + 'a> IntoIterator for &'b Tensor<'a, T> {
@@ -38,13 +43,16 @@ impl<'a, 'b: 'a, T: dtype + 'a> IntoIterator for &'b Tensor<'a, T> {
     }
 }
 
+impl<'a, T: dtype> From<MutTensor<'a, T>> for Tensor<'a, T> {
+    fn from(value: MutTensor<'a, T>) -> Self {
+        value.0
+    }
+}
 // Mutable Wrapper for the Tensor
-pub struct MutTensor <'a, T: dtype> (
-    pub(crate) Tensor<'a, T>
-);
+pub struct MutTensor<'a, T: dtype>(pub(crate) Tensor<'a, T>);
 
-impl <'a, T: dtype> MutTensor<'a, T> {
-    pub fn from (ten: Tensor<'a, T>) -> MutTensor<'a , T>{
+impl<'a, T: dtype> MutTensor<'a, T> {
+    pub fn from(ten: Tensor<'a, T>) -> MutTensor<'a, T> {
         MutTensor(ten)
     }
 }
@@ -59,11 +67,10 @@ impl<'a, 'b: 'a, T: dtype + 'a> IntoIterator for &'b mut MutTensor<'a, T> {
 }
 
 // Display All of Body
-impl<T: dtype + Display> Display for Tensor<'_, T> 
-
-{
+impl<T: dtype + Display> Display for Tensor<'_, T> {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), Error> {
-        let elements = self.data
+        let elements = self
+            .data
             .iter()
             .map(|d| d.to_string())
             .collect::<Vec<_>>()
