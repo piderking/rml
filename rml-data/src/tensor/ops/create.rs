@@ -1,24 +1,15 @@
 use super::super::traits::dtype::dtype;
+use std::f32::consts::E;
 use std::ops::{Add, Div, Mul, RangeTo};
 
-
-    
 /*
-pub trait Sigmoid <T: dtype, Output = T / dtype >
-
-*/
-
-
-
-
-/*
+Prior Implementation
 ops!(trait Power (Mul<Self>), (
     fn pow(&self, i){
         Self::from_f32(self.as_f32().powf(i.as_f32()))
     })
 );
 
-use std::f32::consts::E;
 
 
 
@@ -43,9 +34,6 @@ ops!(trait TanH (), (
 
 // Other Impl
 
-
-
-
 // T$(:$($con:tt)+*)?
 macro_rules! op {
     /*
@@ -58,7 +46,7 @@ macro_rules! op {
     };
      */
 ($name: ident<T$(:$($con:tt),*)?> {$($i:item)*}) => {
-        pub trait $name <T: Clone $($(+ $con)*)?> 
+        pub trait $name <T: Clone $($(+ $con)*)?>
         // Trait Bounds For SElf
         {
             // No Trait Bonds on rest
@@ -75,7 +63,7 @@ macro_rules! op {
         }
     };
     ($name: ident<T$(:$($con:tt),*)?> {$($i:item)*}) => {
-        pub trait $name <T: Clone $($(+ $con)*)?> 
+        pub trait $name <T: Clone $($(+ $con)*)?>
         {
             // No Trait Bonds on rest
             type Output: Clone;
@@ -83,28 +71,23 @@ macro_rules! op {
         }
     };
     ($name: ident<T:$($con:tt),*><Output = $($assoc:tt),*>) => {
-        pub trait $name <T: Clone $(+ $con)*> 
+        pub trait $name <T: Clone $(+ $con)*>
         {
             // No Trait Bounds on rest
             type Output: Clone $(+ $assoc)*;
         }
     };
-    
+
 }
 
 op!(Sigmoid {
     fn sigmoid(&self) -> Self::Output;
 });
 
-
-impl <T:dtype> Sigmoid for T {
+impl<T: dtype> Sigmoid for T {
     type Output = T;
 
     fn sigmoid(&self) -> Self::Output {
-        Self::Output::from_f32((1.0)/(1.0+E.powf(-1.0*self.as_f32())))
+        Self::Output::from_f32((1.0) / (1.0 + E.powf(-1.0 * self.as_f32())))
     }
-    
-    
 }
-
-
