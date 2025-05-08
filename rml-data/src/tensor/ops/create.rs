@@ -2,39 +2,6 @@ use super::super::traits::dtype::dtype;
 use std::f32::consts::E;
 use std::ops::{Add, Div, Mul, RangeTo};
 
-/*
-Prior Implementation
-ops!(trait Power (Mul<Self>), (
-    fn pow(&self, i){
-        Self::from_f32(self.as_f32().powf(i.as_f32()))
-    })
-);
-
-
-
-
-ops!(trait Relu (), (
-    fn relu(&self){
-        if self.as_f32() > 0.0 {
-            self.clone()
-        } else {
-            Self::from_f32(0.0)
-        }
-    })
-);
-
-// TanH
-// (e^x - e^-x) / (e^x + e^-x)
-ops!(trait TanH (), (
-    fn tanh(&self){
-        let t = self.clone().as_f32();
-        Self::from_f32((E.powf(t) - E.powf(-1.0 * t))/(E.powf(t) + E.powf(-1.0 * t)))
-    })
-); */
-
-// Other Impl
-
-// T$(:$($con:tt)+*)?
 macro_rules! op {
     /*
     (fn $fn:ident (&$self_ident:ident $(, $arg:ident: $arg_ty:ty)*) -> $ret:ty $(where $($where:ty:$wherer:tt)+)?) => {
@@ -89,5 +56,34 @@ impl<T: dtype> Sigmoid for T {
 
     fn sigmoid(&self) -> Self::Output {
         Self::Output::from_f32((1.0) / (1.0 + E.powf(-1.0 * self.as_f32())))
+    }
+}
+
+op!(TanH {
+    fn tanh(&self) -> Self::Output;
+});
+
+impl<T: dtype> TanH for T {
+    type Output = T;
+
+    fn tanh(&self) -> Self::Output {
+        let t = self.clone().as_f32();
+        Self::Output::from_f32((E.powf(t) - E.powf(-1.0 * t)) / (E.powf(t) + E.powf(-1.0 * t)))
+    }
+}
+
+op!(Relu {
+    fn relu(&self) -> Self::Output;
+});
+
+impl<T: dtype> Relu for T {
+    type Output = T;
+
+    fn relu(&self) -> Self::Output {
+        if self.as_f32() >= 0.0 && self.as_f32() <= 1.0 {
+            self.clone()
+        } else {
+            Self::Output::from_f32(0.0)
+        }
     }
 }
