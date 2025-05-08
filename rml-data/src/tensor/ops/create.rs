@@ -1,3 +1,5 @@
+use crate::tensor::traits::tensor::TensorBound;
+
 use super::super::traits::dtype::dtype;
 use std::f32::consts::E;
 use std::ops::{Add, Div, Mul, RangeTo};
@@ -87,3 +89,8 @@ impl<T: dtype> Relu for T {
         }
     }
 }
+
+// Tensor Opperation Macros
+op!(Combine <T: TensorBound> {
+    fn combine(&mut self, other: T) -> Self;
+});
