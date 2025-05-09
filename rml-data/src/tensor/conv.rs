@@ -13,12 +13,3 @@ impl <'a, T: dtype> Into<MutTensor<'a, T>> for Tensor<'a, T> {
         MutTensor::from(self)
     }
 }
-
-///  Tensor -> Tensor Mut
-/// TensorMut -> Tensor
-impl <'a, T: dtype> Into<Tensor<'a, T>> for MutTensor<'a, T> {
-    fn into(self) -> Tensor<'a, T> {
-        self.0.to_owned()
-    }
-}
-

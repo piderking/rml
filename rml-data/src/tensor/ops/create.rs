@@ -91,6 +91,13 @@ impl<T: dtype> Relu for T {
 }
 
 // Tensor Opperation Macros
-op!(Combine <T: TensorBound> {
+/*
+op!(Combine <T: TensorBound> { // Combine // <T> with
     fn combine(&mut self, other: T) -> Self;
 });
+// Tensor Opperation Macros
+op!(CombineMul <T: TensorBound> { // Combine // <T> with
+    fn combine(&mut self, other: T) -> Self;
+});
+
+*/

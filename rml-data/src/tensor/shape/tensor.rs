@@ -31,6 +31,12 @@ where
     pub fn len(&self) -> usize {
         self.data.len()
     }
+    pub fn combine(&mut self, other: Tensor<'_, T> ) -> () {
+        self.data.extend_from_slice(Vec::with_capacity({
+            i32::abs(self.len() as i32 - other.len() as i32) as usize
+        }).as_slice());
+        self.data.iter_mut().zip(other.into_iter()).map(|(f1, f2)| *f1 =  f2.clone());
+    } 
 }
 
 // Implement Itterator
@@ -56,6 +62,8 @@ impl<'a, T: dtype> MutTensor<'a, T> {
         MutTensor(ten)
     }
 }
+
+
 // Implement Itterator
 impl<'a, 'b: 'a, T: dtype + 'a> IntoIterator for &'b mut MutTensor<'a, T> {
     type IntoIter = IterMut<'a, T>;
