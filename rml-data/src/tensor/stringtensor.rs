@@ -13,14 +13,17 @@ impl StringTensor {
     }
 }
 
+
 impl TensorBound for StringTensor {
     type inner = String;
 
-    fn apply<F: Fn(&Self::inner) -> Self::inner>(self, f: F) -> Self {
-        todo!()
+    fn apply<F: Fn(&String) -> Self::inner>(self, f: F) -> Self {
+        Self::from(self.data.iter().map(f).collect())
     }
 
     fn mutate<F: Fn(&Self::inner) -> Self::inner>(&mut self, f: F) -> () {
-        todo!()
+        for t in self.data.iter_mut() {
+            *t = f(t)
+        }
     }
 }

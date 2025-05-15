@@ -45,7 +45,7 @@ impl<T: dtype> Softmax for Tensor<'_, T> {
         let sum: T = self.sum();
 
         // clone the data --> return copy of it
-        self.clone().apply(|f| f.clone() / sum.clone())
+        self.clone().apply(|f| f.relu() / sum.clone())
     }
 }
 

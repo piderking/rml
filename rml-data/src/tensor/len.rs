@@ -1,15 +1,7 @@
 use std::{
-    cell::RefCell,
     fmt::{Display, Error, Formatter},
     ops::Add,
-    rc::Rc,
 };
-
-use super::{shape::{deep::Deep, }, traits::{dtype::dtype, tensor::TensorBound}};
-
-
-
-
 
 /*impl<T: dtype> TensorSizable for &dyn TensorBound<T = T> {
     fn to_size(&self) -> TensorSize {
@@ -31,11 +23,7 @@ impl TensorSize {
             size: t,
         }
     }
-    
 }
-
-
-
 
 impl Add<Box<[usize]>> for TensorSize {
     type Output = Box<[usize]>;
@@ -50,7 +38,7 @@ impl Add<Box<[usize]>> for TensorSize {
 }
 
 // Conversion
-impl From<Box<[usize]>> for TensorSize  {
+impl From<Box<[usize]>> for TensorSize {
     fn from(value: Box<[usize]>) -> Self {
         TensorSize::new(value)
     }
@@ -60,7 +48,6 @@ impl From<&TensorSize> for Box<[usize]> {
         val.clone().size
     }
 }
-
 
 // Display
 impl Display for TensorSize {
@@ -74,5 +61,3 @@ impl Display for TensorSize {
         write!(f, "[{}]", elements)
     }
 }
-
-

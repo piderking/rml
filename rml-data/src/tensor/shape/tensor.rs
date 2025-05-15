@@ -58,7 +58,7 @@ where
     pub fn sum(&self) -> T {
         let mut t = T::from_f32(0.0);
         for i in self.data.iter() {
-            t = t + i.clone()
+            t = t + i.relu()
         }
         t
     }
