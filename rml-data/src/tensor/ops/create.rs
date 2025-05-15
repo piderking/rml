@@ -77,7 +77,8 @@ op!(Relu {
 
 impl<T: dtype> Relu for T {
     fn relu(&self) -> Self {
-        if self.as_f32() >= 0.0 && self.as_f32() <= 1.0 {
+        if self.as_f32() >= 0.0 {
+            // && self.as_f32() <= 1.0
             self.clone()
         } else {
             Self::from_f32(0.0)
@@ -85,6 +86,9 @@ impl<T: dtype> Relu for T {
     }
 }
 
+op!(Softmax {
+    fn softmax(&self) -> Self;
+});
 // Tensor Opperation Macros
 /*
 op!(Combine <T: TensorBound> { // Combine // <T> with

@@ -1,4 +1,5 @@
 use std::{
+    fmt::Display,
     marker::PhantomData,
     ops::{Add, Div, Mul, Sub},
 };
@@ -16,10 +17,7 @@ use super::super::len::TensorSize;
 #[allow(non_camel_case_types)]
 pub trait dtype: dtypeops
 where
-    Self: Sub<Self, Output = Self>,
-    Self: Add<Self, Output = Self>,
-    Self: Mul<Self, Output = Self>,
-    Self: Div<Self, Output = Self>,
+    Self: Display,
 {
     fn default() -> Self;
     fn to_value(&self) -> Self;

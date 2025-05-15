@@ -1,7 +1,8 @@
 use std::marker::PhantomData;
 
 use super::{tensor::TensorWrapper, tensorable::Tensorable};
-pub enum Tensor<T: Tensorable> {
+
+pub enum TensorFold<T: Tensorable> {
     DEEP(Vec<Tensor<T>>, PhantomData<T>),
     SHALLOW(TensorWrapper<T>),
     EMPTY,

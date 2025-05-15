@@ -5,13 +5,11 @@ use crate::tensor::{
 
 use super::dtype::dtype;
 
-pub trait TensorBound
-where
-    Self::inner: dtypeops,
-{
+pub trait TensorBound {
     #[allow(non_camel_case_types)]
-    type inner: dtype; // Resulting Valu
-
+    type inner; // Resulting Valu
+    fn apply<F: Fn(&Self::inner) -> Self::inner>(self, f: F) -> Self;
+    fn mutate<F: Fn(&Self::inner) -> Self::inner>(&mut self, f: F) -> ();
 }
 
 impl<T> TensorBound for Tensor<'_, T>
@@ -19,6 +17,12 @@ where
     T: dtype + dtypeops,
 {
     type inner = T;
-    
-}
 
+    fn apply<F: Fn(&T) -> T>(self, f: F) -> Self {
+        self.apply(f)
+    }
+
+    fn mutate<F: Fn(&T) -> T>(&mut self, f: F) -> () {
+        self.mutate(f);
+    }
+}
