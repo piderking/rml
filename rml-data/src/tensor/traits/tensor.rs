@@ -22,11 +22,3 @@ where
     
 }
 
-impl<T, U> TensorBound for Deep<T>
-where
-    U: dtype,
-    T: TensorBound<inner = U>,
-{
-    type inner = U;
-  
-}

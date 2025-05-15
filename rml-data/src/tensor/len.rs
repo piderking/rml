@@ -76,15 +76,3 @@ impl Display for TensorSize {
 }
 
 
-
-// Living Shallow Size
-#[allow(dead_code)]
-#[derive(Debug, Clone)]
-#[warn(deprecated)]
-pub struct ActiveTensorSize<T: dtype> {
-    data: Rc<RefCell<Vec<T>>>,
-}
-
-impl<T: dtype> ActiveTensorSize<T> {
-
-}

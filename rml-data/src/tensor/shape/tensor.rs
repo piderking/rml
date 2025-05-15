@@ -35,8 +35,26 @@ where
         self.data.extend_from_slice(Vec::with_capacity({
             i32::abs(self.len() as i32 - other.len() as i32) as usize
         }).as_slice());
-        self.data.iter_mut().zip(other.into_iter()).map(|(f1, f2)| *f1 =  f2.clone());
+        
+        for (i, t) in self.data.iter_mut().zip(other.into_iter()) {
+            *i = i.clone() +  t.clone();
+        }
     } 
+    pub fn mutate<F: Fn(&T) -> T>(&mut self, f: F)-> (){
+        for t in self.data.iter_mut(){
+            *t = f(t)
+        }
+    }
+    pub fn apply<F: Fn(&T) -> T>(self, f: F)-> Self{
+        Tensor::from(self.data.iter().map(f).collect())
+    }
+}
+
+// eq
+impl <'a, T: dtype + PartialEq> PartialEq for Tensor<'a, T>{
+    fn eq(&self, other: &Self) -> bool {
+       self.len() == other.len() && self.into_iter().zip(other.into_iter()).filter(|(v1, v2)| v1 != v2).count() == 0
+    }
 }
 
 // Implement Itterator
@@ -55,6 +73,7 @@ impl<'a, T: dtype> From<MutTensor<'a, T>> for Tensor<'a, T> {
     }
 }
 // Mutable Wrapper for the Tensor
+#[warn(deprecated)]
 pub struct MutTensor<'a, T: dtype>(pub(crate) Tensor<'a, T>);
 
 impl<'a, T: dtype> MutTensor<'a, T> {

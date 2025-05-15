@@ -1,6 +1,6 @@
 use std::ops::{Add, Div, Mul, Sub};
 
-use super::create::Sigmoid;
+use super::create::{Relu, Sigmoid};
 
 #[allow(non_camel_case_types)]
 pub trait dtypeops: Clone
@@ -11,6 +11,10 @@ where
     Self::Input: Mul<Self::Input, Output = Self::Input>,
     Self::Input: Div<Self::Input, Output = Self::Input>,
     Self::Input: Sigmoid,
+    Self::Input: Relu,
+
+    // Equals
+    Self::Input: PartialEq
 
 {
     type Input;
