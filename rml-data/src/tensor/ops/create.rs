@@ -1,9 +1,11 @@
 use crate::tensor::traits::tensor::TensorBound;
 
 use super::super::traits::dtype::dtype;
+use super::dtype::dtypeops;
 use std::f32::consts::E;
 use std::ops::{Add, Div, Mul, RangeTo};
 
+#[macro_export]
 macro_rules! op {
     /*
     (fn $fn:ident (&$self_ident:ident $(, $arg:ident: $arg_ty:ty)*) -> $ret:ty $(where $($where:ty:$wherer:tt)+)?) => {
@@ -27,7 +29,6 @@ macro_rules! op {
         pub trait $name
         {
             // No Trait Bonds on rest
-            type Output: Clone;
             $($i)*
         }
     };
@@ -50,42 +51,36 @@ macro_rules! op {
 }
 
 op!(Sigmoid {
-    fn sigmoid(&self) -> Self::Output;
+    fn sigmoid(&self) -> Self;
 });
 
 impl<T: dtype> Sigmoid for T {
-    type Output = T;
-
-    fn sigmoid(&self) -> Self::Output {
-        Self::Output::from_f32((1.0) / (1.0 + E.powf(-1.0 * self.as_f32())))
+    fn sigmoid(&self) -> Self {
+        Self::from_f32((1.0) / (1.0 + E.powf(-1.0 * self.as_f32())))
     }
 }
 
 op!(TanH {
-    fn tanh(&self) -> Self::Output;
+    fn tanh(&self) -> Self;
 });
 
 impl<T: dtype> TanH for T {
-    type Output = T;
-
-    fn tanh(&self) -> Self::Output {
+    fn tanh(&self) -> Self {
         let t = self.clone().as_f32();
-        Self::Output::from_f32((E.powf(t) - E.powf(-1.0 * t)) / (E.powf(t) + E.powf(-1.0 * t)))
+        Self::from_f32((E.powf(t) - E.powf(-1.0 * t)) / (E.powf(t) + E.powf(-1.0 * t)))
     }
 }
 
 op!(Relu {
-    fn relu(&self) -> Self::Output;
+    fn relu(&self) -> Self;
 });
 
 impl<T: dtype> Relu for T {
-    type Output = T;
-
-    fn relu(&self) -> Self::Output {
+    fn relu(&self) -> Self {
         if self.as_f32() >= 0.0 && self.as_f32() <= 1.0 {
             self.clone()
         } else {
-            Self::Output::from_f32(0.0)
+            Self::from_f32(0.0)
         }
     }
 }

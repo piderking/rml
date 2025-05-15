@@ -5,12 +5,11 @@ use crate::tensor::{
     traits::{dtype::dtype, tensor::TensorBound},
 };
 
-
 impl<T: dtype> Div<T> for Tensor<'_, T> {
     type Output = Self;
 
     fn div(self, rhs: T) -> Self::Output {
-        todo!()
+        self.apply(|f| f.clone() / rhs.clone())
     }
 }
 impl<T: dtype> Mul<T> for Tensor<'_, T> {
@@ -20,5 +19,3 @@ impl<T: dtype> Mul<T> for Tensor<'_, T> {
         todo!()
     }
 }
-
-

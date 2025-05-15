@@ -1,6 +1,12 @@
-use std::{marker::PhantomData, ops::Add};
+use std::{
+    marker::PhantomData,
+    ops::{Add, Div, Mul, Sub},
+};
 
-use crate::tensor::ops::dtype::dtypeops;
+use crate::tensor::ops::{
+    create::{Relu, Sigmoid},
+    dtype::dtypeops,
+};
 
 use super::super::len::TensorSize;
 
@@ -10,19 +16,22 @@ use super::super::len::TensorSize;
 #[allow(non_camel_case_types)]
 pub trait dtype: dtypeops
 where
+    Self: Sub<Self, Output = Self>,
     Self: Add<Self, Output = Self>,
+    Self: Mul<Self, Output = Self>,
+    Self: Div<Self, Output = Self>,
 {
     fn default() -> Self;
     fn to_value(&self) -> Self;
 
     // Conversion
-    fn as_f32(&self) -> f32 ;
-    fn from_f32(t: f32) -> Self ;
+    fn as_f32(&self) -> f32;
+    fn from_f32(t: f32) -> Self;
 }
 
 // Trait Defintion for Basic Numbers
 macro_rules! dtype {
-    ($ty:ty, $val:expr, $($i:item)*) => {
+    ($ty:ty, $val:expr, {$($i:item)*}) => {
         impl dtype for $ty {
             fn default() -> Self {
                 $val
@@ -38,21 +47,19 @@ macro_rules! dtype {
 //convert!(f32, self, into_i32:{ *self as i32 }, into_f32:{ *self });
 //convert!(i32, self, into_i32:{ *self }, into_f32:{ *self as f32 });
 
-dtype!(i32, 0, 
+dtype!(i32, 0, {
     fn from_f32(f: f32) -> Self {
         f as i32
     }
     fn as_f32(&self) -> f32 {
         *self as f32
     }
-    
-
-);
-dtype!(f32, 0.0,
+});
+dtype!(f32, 0.0, {
     fn from_f32(f: f32) -> Self {
         f
     }
     fn as_f32(&self) -> f32 {
         *self
     }
-);
+});

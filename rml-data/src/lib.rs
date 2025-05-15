@@ -16,7 +16,7 @@ mod tests {
     }
 
     #[test]
-    pub fn size() {
+    pub fn tensor_size() {
         assert_eq!(tensorm!(1,1).len(), 2)
     }
 }

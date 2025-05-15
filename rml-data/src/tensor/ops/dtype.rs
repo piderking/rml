@@ -6,18 +6,15 @@ use super::create::{Relu, Sigmoid};
 pub trait dtypeops: Clone
 where
     // Add Boundary
-    Self::Input: Add<Self::Input, Output = Self::Input>,
-    Self::Input: Sub<Self::Input, Output = Self::Input>,
-    Self::Input: Mul<Self::Input, Output = Self::Input>,
-    Self::Input: Div<Self::Input, Output = Self::Input>,
-    Self::Input: Sigmoid,
-    Self::Input: Relu,
-
+    Self: Sub<Self, Output = Self>,
+    Self: Add<Self, Output = Self>,
+    Self: Mul<Self, Output = Self>,
+    Self: Div<Self, Output = Self>,
+    Self: Sigmoid,
+    Self: Relu,
     // Equals
-    Self::Input: PartialEq
-
+    Self: PartialEq,
 {
-    type Input;
 }
 
 macro_rules! req_ops {
@@ -28,9 +25,10 @@ macro_rules! req_ops {
             $type: Mul<$type, Output = $type>,
             $type: Div<$type, Output = $type>,
             $type: Sigmoid,
-            $type: Clone
+            $type: Clone,
+            $type: PartialEq,
+
         {
-            type Input = $type;
         })*
     };
 
