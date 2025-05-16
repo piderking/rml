@@ -1,5 +1,6 @@
 mod conv;
 pub mod error;
+mod index;
 mod len;
 pub mod macros;
 pub mod ops;

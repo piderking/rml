@@ -1,6 +1,7 @@
 use std::{
     fmt::{Display, Error, Formatter},
     marker::PhantomData,
+    ops::{Index, IndexMut, Range},
     slice::{Iter, IterMut},
 };
 
@@ -17,7 +18,7 @@ pub struct Tensor<'a, T: dtype> {
     data: Vec<T>,
     phn: PhantomData<&'a T>,
 }
-impl<T> Tensor<'_, T>
+impl<'a, T> Tensor<'a, T>
 where
     T: dtype,
 {
@@ -36,7 +37,7 @@ where
     pub fn len(&self) -> usize {
         self.data.len()
     }
-    pub fn combine(&mut self, other: Tensor<'_, T>) -> () {
+    pub fn combine(&mut self, other: Self) -> () {
         self.data.extend_from_slice(
             Vec::with_capacity(i32::abs(self.len() as i32 - other.len() as i32) as usize)
                 .as_slice(),
@@ -46,11 +47,42 @@ where
             *i = i.clone() + t.clone();
         }
     }
-    pub fn get(&self, i: usize) -> Option<T> {
-        self.data.get(i).cloned()
+    pub(crate) fn data_index(&self, i: usize) -> &T {
+        self.data.index(i)
     }
+    pub(crate) fn data_index_mut(&mut self, i: usize) -> &mut T {
+        self.data.index_mut(i)
+    }
+    pub fn get(&self, i: usize) -> Option<&T> {
+        self.data.get(i)
+    }
+    pub fn get_mut(&mut self, i: usize) -> Option<&mut T> {
+        self.data.get_mut(i)
+    }
+    pub unsafe fn get_unchecked(&self, i: usize) -> &T {
+        unsafe { self.data.get_unchecked(i) }
+    }
+    pub unsafe fn get_mut_unchecked(&mut self, i: usize) -> &mut T {
+        unsafe { self.data.get_unchecked_mut(i) }
+    }
+
+    // range index
+    pub(crate) fn data_range_index(&self, r: Range<usize>) -> Option<&[T]> {
+        match self.data.as_slice().get(r) {
+            Some(n) => Some(n),
+            None => None,
+        }
+    }
+
+    // range mut index
+    pub(crate) fn data_mut_range_index(&mut self, r: Range<usize>) -> Option<&mut [T]> {
+        match self.data.as_mut_slice().get_mut(r) {
+            Some(n) => Some(n),
+            None => None,
+        }
+    }
+
     pub fn mutate<F: Fn(&T) -> T>(&mut self, f: F) -> () {
-        print!("{:}", get![self, 0].unwrap());
         for t in self.data.iter_mut() {
             *t = f(t)
         }
