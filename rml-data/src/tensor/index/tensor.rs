@@ -1,9 +1,4 @@
-use std::{
-    ops::{
-        Index, IndexMut, Range, RangeFrom, RangeFull, RangeInclusive, RangeTo, RangeToInclusive,
-    },
-    slice::SliceIndex,
-};
+use std::ops::{Index, IndexMut, Range};
 
 use crate::tensor::{shape::tensor::Tensor, traits::dtype::dtype};
 

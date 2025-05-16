@@ -7,6 +7,17 @@ pub struct StringTensor {
 }
 
 impl StringTensor {
+    pub fn len(&self) -> usize {
+        self.data.len()
+    }
+    pub fn find(&self, s: String) -> Option<usize> {
+        for (i, st) in self.data.iter().enumerate() {
+            if st.clone() == s {
+                return Option::Some(i);
+            }
+        }
+        Option::None
+    }
     pub fn new(data: &[&str]) -> Self {
         StringTensor::from(data.iter().map(|f| String::from(*f)).collect())
     }
