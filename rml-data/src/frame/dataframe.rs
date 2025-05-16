@@ -24,6 +24,13 @@ macro_rules! frame {
             }
         }
 
+        impl <'a, $($tl:dtype,)+> std::ops::Index<String> for $name<'a, $($tl,)+>{
+            type Output = $ename<'a, $($tl,)+>;
+            fn index(&self, s: String) -> &Self::Output {
+                self.get(s).unwrap()
+            }
+        }
+
 
 
     };
