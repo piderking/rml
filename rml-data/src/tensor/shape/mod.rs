@@ -4,7 +4,7 @@ pub mod tensor;
 
 mod tests {
     use crate::{
-        tensor::{ops::create::Sigmoid, shape::tensor::Tensor},
+        tensor::{ops::create::Sigmoid, shape::tensor::Tensor, traits::tensor::TensorBound},
         tensorm,
     };
 

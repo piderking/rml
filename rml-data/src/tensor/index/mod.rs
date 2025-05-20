@@ -1,11 +1,8 @@
 mod stringtensor;
 mod tensor;
 
-use std::{
-    ops::{
-        Index, IndexMut, Range, RangeFrom, RangeFull, RangeInclusive, RangeTo, RangeToInclusive,
-    },
-    slice::SliceIndex,
+use std::ops::{
+    Index, IndexMut, Range, RangeFrom, RangeFull, RangeInclusive, RangeTo, RangeToInclusive,
 };
 
 pub trait TensorIndex

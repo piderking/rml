@@ -5,7 +5,7 @@ use std::{
     slice::{Iter, IterMut},
 };
 
-use crate::tensor::traits::dtype::dtype;
+use crate::tensor::traits::{dtype::dtype, tensor::TensorBound};
 macro_rules! get {
     [$e:expr, $it:expr] => {
         $e.get($it)
@@ -15,9 +15,11 @@ macro_rules! get {
 // Standard 1 Dimensional
 #[derive(Debug, Clone)]
 pub struct Tensor<'a, T: dtype> {
-    data: Vec<T>,
+    pub(crate) data: Vec<T>,
     phn: PhantomData<&'a T>,
 }
+
+// Transfer these all to Tensorbound (except from/new)
 impl<'a, T> Tensor<'a, T>
 where
     T: dtype,
@@ -33,37 +35,6 @@ where
             data,
             phn: PhantomData,
         }
-    }
-    pub fn len(&self) -> usize {
-        self.data.len()
-    }
-    pub fn combine(&mut self, other: Self) -> () {
-        self.data.extend_from_slice(
-            Vec::with_capacity(i32::abs(self.len() as i32 - other.len() as i32) as usize)
-                .as_slice(),
-        );
-
-        for (i, t) in self.data.iter_mut().zip(other.into_iter()) {
-            *i = i.clone() + t.clone();
-        }
-    }
-    pub(crate) fn data_index(&self, i: usize) -> &T {
-        self.data.index(i)
-    }
-    pub(crate) fn data_index_mut(&mut self, i: usize) -> &mut T {
-        self.data.index_mut(i)
-    }
-    pub fn get(&self, i: usize) -> Option<&T> {
-        self.data.get(i)
-    }
-    pub fn get_mut(&mut self, i: usize) -> Option<&mut T> {
-        self.data.get_mut(i)
-    }
-    pub unsafe fn get_unchecked(&self, i: usize) -> &T {
-        unsafe { self.data.get_unchecked(i) }
-    }
-    pub unsafe fn get_mut_unchecked(&mut self, i: usize) -> &mut T {
-        unsafe { self.data.get_unchecked_mut(i) }
     }
 
     // range index
@@ -82,20 +53,12 @@ where
         }
     }
 
-    pub fn mutate<F: Fn(&T) -> T>(&mut self, f: F) -> () {
-        for t in self.data.iter_mut() {
-            *t = f(t)
-        }
-    }
     pub fn sum(&self) -> T {
         let mut t = T::from_f32(0.0);
         for i in self.data.iter() {
             t = t + i.relu()
         }
         t
-    }
-    pub fn apply<F: Fn(&T) -> T>(self, f: F) -> Self {
-        Tensor::from(self.data.iter().map(f).collect())
     }
 }
 

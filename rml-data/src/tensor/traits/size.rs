@@ -1,6 +1,6 @@
 use crate::tensor::{len::TensorSize, shape::tensor::Tensor};
 
-use super::dtype::dtype;
+use super::{dtype::dtype, tensor::TensorBound};
 
 pub trait TensorSizable {
     #[allow(dead_code)]

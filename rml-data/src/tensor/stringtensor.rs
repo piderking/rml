@@ -1,9 +1,12 @@
-use std::ops::{Index, IndexMut, Range};
+use std::{
+    ops::{Index, IndexMut, Range},
+    slice::Iter,
+};
 
 use super::{index::TensorIndex, traits::tensor::TensorBound};
 
 pub struct StringTensor {
-    data: Vec<String>,
+    pub(crate) data: Vec<String>,
 }
 
 impl StringTensor {
@@ -24,40 +27,6 @@ impl StringTensor {
     pub fn from(data: Vec<String>) -> Self {
         StringTensor { data }
     }
-    pub(crate) fn data_index(&self, i: usize) -> &String {
-        self.data.index(i)
-    }
-    pub(crate) fn data_index_mut(&mut self, i: usize) -> &mut String {
-        self.data.index_mut(i)
-    }
-    pub fn get(&self, i: usize) -> Option<&String> {
-        self.data.get(i)
-    }
-    pub fn get_mut(&mut self, i: usize) -> Option<&mut String> {
-        self.data.get_mut(i)
-    }
-    pub unsafe fn get_unchecked(&self, i: usize) -> &String {
-        unsafe { self.data.get_unchecked(i) }
-    }
-    pub unsafe fn get_mut_unchecked(&mut self, i: usize) -> &mut String {
-        unsafe { self.data.get_unchecked_mut(i) }
-    }
-
-    // range index
-    pub(crate) fn data_range_index(&self, r: Range<usize>) -> Option<&[String]> {
-        match self.data.as_slice().get(r) {
-            Some(n) => Some(n),
-            None => None,
-        }
-    }
-
-    // range mut index
-    pub(crate) fn data_mut_range_index(&mut self, r: Range<usize>) -> Option<&mut [String]> {
-        match self.data.as_mut_slice().get_mut(r) {
-            Some(n) => Some(n),
-            None => None,
-        }
-    }
 }
 
 impl TensorIndex for StringTensor {}
@@ -69,8 +38,45 @@ impl TensorBound for StringTensor {
     }
 
     fn mutate<F: Fn(&Self::inner) -> Self::inner>(&mut self, f: F) -> () {
-        for String in self.data.iter_mut() {
-            *String = f(String)
+        for s in self.data.iter_mut() {
+            *s = f(s)
         }
+    }
+
+    fn push(&mut self, item: Self::inner) -> &Self {
+        self.data.push(item);
+        self
+    }
+
+    fn len(&self) -> usize {
+        self.data.len()
+    }
+
+    fn get(&self, i: usize) -> Option<&Self::inner> {
+        self.data.get(i)
+    }
+
+    fn get_mut(&mut self, i: usize) -> Option<&mut Self::inner> {
+        self.data.get_mut(i)
+    }
+
+    fn combine(&mut self, other: Self) {
+        self.data.extend_from_slice(
+            Vec::with_capacity(i32::abs(self.len() as i32 - other.len() as i32) as usize)
+                .as_slice(),
+        );
+
+        for (i, t) in self.data.iter_mut().zip(other.into_iter()) {
+            *i = format!("{}{}", i.clone(), t.clone());
+        }
+    }
+}
+
+impl<'a> IntoIterator for &'a StringTensor {
+    type IntoIter = Iter<'a, String>;
+    type Item = &'a String;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.data.iter()
     }
 }
