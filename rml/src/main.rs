@@ -1,4 +1,4 @@
-use rml_data::tensor::ops::create::{Power, Sigmoid};
+use rml_data::tensor::ops::create::Sigmoid;
 use rml_data::tensor::shape::tensor::Tensor;
 use rml_data::tensorm;
 

@@ -1,39 +1,124 @@
-use proc_macro::TokenStream as TokenExport;
-use proc_macro2::TokenStream;
-use quote::{ToTokens, quote};
-use syn::parse::ParseStream;
-use syn::token::{self, Token};
-use syn::{Data, Expr, ExprArray, Fields, Ident, LitStr, bracketed};
-use syn::{LitInt, Token, parse::Parse, parse_macro_input};
+/*use super::tensor::TensorWrapper;
 
-pub(crate) struct Slice {
-    bracket_token: token::Bracket,
-    content: TokenStream,
-}
-
-impl Parse for Slice {
-    fn parse(input: syn::parse::ParseStream) -> syn::Result<Self> {
-        let col;
-
-        let bracket_token = bracketed!(col in input);
-
-        match col.parse::<Expr>() {
-            Ok(n) => match n {
-                Expr::Array(e) => {
-                    //let e = e.to_token_stream().into_iter().map(|d| );
-                    todo!()
+// frame!()
+macro_rules! frame {
+    /*
+     // Implement Into<Option<Tensor<>>> for each enum variant
+        $(
+            impl<'a> Into<Option<crate::tensor::shape::tensor::Tensor<'a, $tl>>> for $ename<'a, $($tl),+>
+            where
+                $tl: crate::tensor::traits::dtype::dtype,
+            {
+                fn into(self) -> Option<crate::tensor::shape::tensor::Tensor<'a, $tl>> {
+                    match self {
+                        $ename::$tl(tensor) => Some(tensor),
+                        _ => None,
+                    }
                 }
-                _ => todo!(),
-            },
-            Err(_) => todo!(),
+            }
+        )+
+
+
+      (into, $name:ident, $tp:tt, ($($tl:tt,)+)) => {
+        impl <'a, $($tl: crate::tensor::traits::dtype::dtype),+> Into<Option<crate::tensor::shape::tensor::Tensor<'a, $tp>>> for $name<'a, $($tl,)+> {
+            fn into(self) -> Option<crate::tensor::shape::tensor::Tensor<'a, $tp>>{
+                 match self {
+                        $name::$tp(tensor) => Some(tensor),
+                        _ => None,
+                    }
+            }
         }
-        //if col.lookahead1().peek(token::Bracket)
-        /*
-        Ok(Slice {
-            bracket_token: bracketed!(col in input),
-            content: col.parse()?,
-        }) */
-        todo!()
-    }
+    };
+     */
+
+
+    (frame $name:ident $ename:ident ($($tl: tt),+)) => {
+
+
+        pub enum $ename<'a, $($tl: crate::tensor::traits::dtype::dtype),+> {
+            $($tl(crate::tensor::shape::tensor::Tensor<'a, $tl>),)+
+        }
+
+        // Invoke Macro Above
+
+
+
+
+        pub struct $name<'a, $($tl:crate::tensor::traits::dtype::dtype,)+> {
+            header: crate::tensor::stringtensor::StringTensor,
+            data: Vec<$ename<'a, $($tl),+>>,
+        }
+
+
+        impl<'a, $($tl:crate::tensor::traits::dtype::dtype,)+> $name<'a, $($tl,)+> {
+            pub fn len(&self) -> usize {
+                self.header.len() // header dictates size
+            }
+            pub fn get(&self, s: String) -> Option<&$ename<'a, $($tl,)+>> {
+                self.header.find(s).and_then(|i| self.data.get(i))
+            }
+
+        }
+
+        impl <'a, $($tl:crate::tensor::traits::dtype::dtype,)+> std::ops::Index<String> for $name<'a, $($tl,)+>{
+            type Output = $ename<'a, $($tl,)+>;
+            fn index(&self, s: String) -> &Self::Output {
+                self.get(s).unwrap()
+            }
+        }
+
+
+
+
+
+    };
+
+
+
 }
-pub(crate) fn tensor_constructor(input: ParseStream) -> TokenExport {}
+
+//frame!(frame Df DfEnum (T, A));
+
+frame!(frame Df DfEnum (T, A));
+ */
+
+use proc_macro::TokenStream;
+use proc_macro2::TokenStream as Tokens;
+use quote::{ToTokens, quote};
+use syn::{Data, DeriveInput, Fields, Ident, Type};
+
+pub(crate) fn impl_df_creator(input: &DeriveInput) -> Tokens {
+    // Extract the struct name
+    let name = &input.ident;
+
+    let ename = Ident::new(&format! {"{}Typed", &input.ident}, input.ident.span());
+
+    // Generate the method to count fields
+
+    // Convert the generated code into a TokenStream
+    let t = match &input.data {
+        Data::Struct(data_struct) => data_struct.fields.iter().filter_map(|f| match &f.ident {
+            Some(i) => Option::Some(DFFeilds {
+                name: i.clone(),
+                ty: f.ty.clone(),
+            }),
+            None => todo!(),
+        }),
+        _ => todo!(),
+    };
+    //TokenStream::from(input)
+    quote![]
+}
+
+struct DF {
+    // Names
+    name: Ident,
+    ename: Ident,
+    // Feilds
+    feild: Vec<DFFeilds>,
+}
+
+struct DFFeilds {
+    name: Ident,
+    ty: Type,
+}
