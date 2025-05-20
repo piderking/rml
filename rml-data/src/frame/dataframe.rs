@@ -40,8 +40,31 @@ macro_rules! frame {
         }
 
         // Invoke Macro Above
+        impl <'a, $($tl: crate::tensor::traits::dtype::dtype),+> $ename <'a, $($tl),+>{
+            $(
+                #[allow(non_snake_case)]
+                pub fn $tl (&self) -> Option<&crate::tensor::shape::tensor::Tensor<'a, $tl>> {
+                    match self {
+                        $ename::$tl(tensor) => Option::Some(tensor),
+                        _ => Option::None,
+                    }
+                }
+            )+
 
-
+            pub fn into <T: crate::tensor::traits::dtype::dtype> (&self) -> Option<crate::tensor::shape::tensor::Tensor<'a, T>>{
+                match self {
+                        $($ename::$tl(tensor) => {
+                            if stringify!(T) == stringify!($tl){
+                                Option::Some(crate::tensor::change::DtypeChange(tensor.clone()).into())
+                            } else {
+                                Option::None
+                            }
+                        },)+
+                        #[allow(unreachable_patterns)] // Safety
+                        _ => Option::None,
+                    }
+            }
+        }
 
 
         pub struct $name<'a, $($tl:crate::tensor::traits::dtype::dtype,)+> {
@@ -79,4 +102,4 @@ macro_rules! frame {
 
 //frame!(frame Df DfEnum (T, A));
 
-frame!(frame Df DfEnum (T, A));
+frame!(frame Df DfEnum (Cash, A));
