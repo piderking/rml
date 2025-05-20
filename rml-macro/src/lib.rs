@@ -21,7 +21,7 @@ pub fn df_creator(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as DeriveInput);
 
     // Generate code based on the parsed input
-    tensorn::impl_df_creator(&input)
+    tensorn::impl_df_creator(&input).into()
 }
 
 /*

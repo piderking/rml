@@ -84,30 +84,31 @@ frame!(frame Df DfEnum (T, A));
 
 use proc_macro::TokenStream;
 use proc_macro2::TokenStream as Tokens;
-use quote::{ToTokens, quote};
+use quote::{quote, ToTokens, TokenStreamExt};
 use syn::{Data, DeriveInput, Fields, Ident, Type};
 
 pub(crate) fn impl_df_creator(input: &DeriveInput) -> Tokens {
     // Extract the struct name
     let name = &input.ident;
 
-    let ename = Ident::new(&format! {"{}Typed", &input.ident}, input.ident.span());
 
     // Generate the method to count fields
 
     // Convert the generated code into a TokenStream
-    let t = match &input.data {
+    let df = DF::new(
+        name.clone(),
+        match &input.data {
         Data::Struct(data_struct) => data_struct.fields.iter().filter_map(|f| match &f.ident {
             Some(i) => Option::Some(DFFeilds {
                 name: i.clone(),
                 ty: f.ty.clone(),
             }),
             None => todo!(),
-        }),
-        _ => todo!(),
-    };
+        }).collect(),
+        _ => panic!("Cannot use Enum!"),
+    });
     //TokenStream::from(input)
-    quote![]
+    quote![t]
 }
 
 struct DF {
@@ -115,10 +116,20 @@ struct DF {
     name: Ident,
     ename: Ident,
     // Feilds
-    feild: Vec<DFFeilds>,
+    feilds: Vec<DFFeilds>,
+}
+impl DF {
+    pub fn new(name: Ident, feilds: Vec<DFFeilds>) -> Self {
+        Self {
+            ename: Ident::new(&format! {"{}Typed", &name}, name.span()),
+            name: name,
+            feilds: feilds,
+        }
+    }
 }
 
 struct DFFeilds {
     name: Ident,
     ty: Type,
 }
+

@@ -20,3 +20,4 @@ impl<'a, T: dtype> From<&[T]> for Tensor<'a, T> {
         Self::new(value)
     }
 }
+
