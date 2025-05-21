@@ -25,6 +25,7 @@ where
     // Conversion
     fn as_f32(&self) -> f32;
     fn from_f32(t: f32) -> Self;
+    fn to <T: dtype> (self) -> T; 
 }
 
 // Trait Defintion for Basic Numbers
@@ -37,6 +38,10 @@ macro_rules! dtype {
             fn to_value(&self) -> Self {
                 *self
             }
+            fn to <T: dtype> (self) -> T {
+                T::from_f32(self as f32)
+            } 
+
             $($i)*
         }
     };

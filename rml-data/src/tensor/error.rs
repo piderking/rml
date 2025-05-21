@@ -37,3 +37,12 @@ pub enum TensorOpperationError {
     #[error("unknown data store error")]
     Unknown,
 }
+
+
+#[derive(Error, Debug)]
+pub enum DataFrameError {
+    #[error("Collumn: {c1:?} does not exsist")]
+    UnknownCol{ c1: String },
+    #[error("unknown data frame error")]
+    Unknown,
+}
