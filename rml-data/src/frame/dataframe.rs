@@ -1,9 +1,8 @@
-use super::tensor::TensorWrapper;
 use crate::tensor::traits::dtype::dtype;
 use crate::tensor::traits::tensor::TensorBound;
 use std::cell::RefCell;
-use std::cell::{Ref, RefMut};
-use std::ops::IndexMut;
+use std::cell::RefMut;
+
 use std::rc::Rc;
 pub trait FrameTyped {}
 
@@ -26,21 +25,9 @@ pub trait DataFrame {
     // fn extend <T: dtype>  (&mut self, )
 }
 
-#[test]
-pub fn test() {
-    let mut t = Rc::new(RefCell::new(vec![1, 1, 1]));
-
-    println!("{:?}", t.borrow());
-    for t in t.borrow_mut().iter_mut() {
-        *t = 0;
-    }
-    RefMut::map(t.borrow_mut(), |f| {
-        f.push(1);
-        f
-    });
-    println!("{:?}", t.borrow());
-}
 // frame!()
+#[allow(unused)]
+#[macro_export]
 macro_rules! frame {
 
     (frame $name:ident $ename:ident ($($tl: tt),+)) => {
@@ -131,8 +118,9 @@ macro_rules! frame {
         }
 
         impl<'a, $($tl:crate::tensor::traits::dtype::dtype,)+>  $name<'a, $($tl,)+> {
-            
+
             #[allow(non_snake_case)]
+            #[allow(unused)]
             fn new($($tl: crate::tensor::shape::tensor::Tensor<'a, $tl>,)+) -> Self {
                 Self {
                     data: vec![
@@ -141,6 +129,8 @@ macro_rules! frame {
                     header: crate::tensor::stringtensor::StringTensor::from(vec![$(stringify!($tl).to_string(),)+])
                 }
             }
+
+            #[allow(unused)]
             fn empty() -> Self {
                 Self {
                     data: vec![
@@ -220,5 +210,15 @@ macro_rules! frame {
 
 }
 
-//frame!(frame Df DfEnum (T, A));
-frame!(frame Df DfEnum (Birthday, A, Bag, Snack));
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{tensor::types::tstring::TString, tstring};
+
+    #[test]
+    pub fn macro_rules() {
+        frame!(frame Database DataTyped (Name, Age, Size));
+
+        let t: Database<'_, i32, f32, TString> = Database::empty();
+    }
+}

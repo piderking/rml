@@ -1,9 +1,7 @@
 mod stringtensor;
 mod tensor;
 
-use std::ops::{
-    Index, IndexMut, Range, RangeFrom, RangeFull, RangeInclusive, RangeTo, RangeToInclusive,
-};
+use std::ops::{Index, IndexMut, Range};
 
 pub trait TensorIndex
 where

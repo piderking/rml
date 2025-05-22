@@ -1,11 +1,8 @@
 use std::ops::{Add, Div, Mul, Sub};
 
-use crate::{
-    op,
-    tensor::{
-        shape::tensor::{MutTensor, Tensor},
-        traits::{dtype::dtype, tensor::TensorBound},
-    },
+use crate::tensor::{
+    shape::tensor::Tensor,
+    traits::{dtype::dtype, tensor::TensorBound},
 };
 
 use super::create::{Relu, Sigmoid, Softmax};

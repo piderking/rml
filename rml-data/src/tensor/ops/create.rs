@@ -56,6 +56,9 @@ op!(Sigmoid {
 
 impl<T: dtype> Sigmoid for T {
     fn sigmoid(&self) -> Self {
+        if T::is_string() {
+            panic!("is string!")
+        }
         Self::from_f32((1.0) / (1.0 + E.powf(-1.0 * self.as_f32())))
     }
 }
@@ -66,6 +69,9 @@ op!(TanH {
 
 impl<T: dtype> TanH for T {
     fn tanh(&self) -> Self {
+        if T::is_string() {
+            panic!("is string!")
+        }
         let t = self.clone().as_f32();
         Self::from_f32((E.powf(t) - E.powf(-1.0 * t)) / (E.powf(t) + E.powf(-1.0 * t)))
     }
@@ -77,6 +83,9 @@ op!(Relu {
 
 impl<T: dtype> Relu for T {
     fn relu(&self) -> Self {
+        if T::is_string() {
+            panic!("is string!")
+        }
         if self.as_f32() >= 0.0 {
             // && self.as_f32() <= 1.0
             self.clone()

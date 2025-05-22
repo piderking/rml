@@ -4,12 +4,12 @@ use std::{
     ops::{Add, Div, Mul, Sub},
 };
 
+use super::super::len::TensorSize;
 use crate::tensor::ops::{
     create::{Relu, Sigmoid},
     dtype::dtypeops,
 };
 use crate::tensor::types::tstring::TString;
-use super::super::len::TensorSize;
 
 // Trait Bound for primitives and objects
 // Bind the types that can be tensorable
@@ -21,11 +21,12 @@ where
 {
     fn default() -> Self;
     fn to_value(&self) -> Self;
+    fn is_string() -> bool;
 
     // Conversion
     fn as_f32(&self) -> f32;
     fn from_f32(t: f32) -> Self;
-    fn to <T: dtype> (self) -> T; 
+    fn to<T: dtype>(self) -> T;
 }
 
 // Trait Defintion for Basic Numbers
@@ -40,7 +41,8 @@ macro_rules! dtype {
             }
             fn to <T: dtype> (self) -> T {
                 T::from_f32(self as f32)
-            } 
+            }
+            fn is_string() -> bool {false}
 
             $($i)*
         }
@@ -67,6 +69,30 @@ dtype!(f32, 0.0, {
     }
 });
 
+impl dtype for TString {
+    fn default() -> Self {
+        todo!()
+    }
+
+    fn to_value(&self) -> Self {
+        todo!()
+    }
+
+    fn as_f32(&self) -> f32 {
+        todo!()
+    }
+
+    fn from_f32(t: f32) -> Self {
+        todo!()
+    }
+
+    fn to<T: dtype>(self) -> T {
+        todo!()
+    }
+    fn is_string() -> bool {
+        true
+    }
+}
 /*
 dtype!(TString, TString::new(), {
     fn from_f32(f: f32) -> Self {
