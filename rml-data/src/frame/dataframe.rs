@@ -10,8 +10,8 @@ pub trait DataFrame {
     type Typed: FrameTyped;
 
     fn len(&self) -> usize;
-    fn get(&self, s: String) -> Option<&Self::Typed>;
-    fn get_mut(&mut self, s: String) -> Option<&mut Self::Typed>;
+    fn get(&self, s: &String) -> Option<&Self::Typed>;
+    fn get_mut(&mut self, s: &String) -> Option<&mut Self::Typed>;
     fn push<T: dtype>(
         &mut self,
         s: String,
@@ -19,7 +19,7 @@ pub trait DataFrame {
     ) -> Result<&mut Self, crate::tensor::error::DataFrameError>;
     fn extend<T: dtype>(
         &mut self,
-        s: String,
+        s: &String,
         item: Vec<T>,
     ) -> Result<&mut Self, crate::tensor::error::DataFrameError>;
     // fn extend <T: dtype>  (&mut self, )
@@ -31,7 +31,6 @@ pub trait DataFrame {
 macro_rules! frame {
 
     (frame $name:ident $ename:ident ($($tl: tt),+)) => {
-
         pub enum $ename<'a, $($tl: crate::tensor::traits::dtype::dtype),+> {
             // TODO Make into RefCell
             $($tl(Rc<RefCell<crate::tensor::shape::tensor::Tensor<'a, $tl>>>),)+
@@ -79,16 +78,14 @@ macro_rules! frame {
             pub fn push <T: crate::tensor::traits::dtype::dtype> (&mut self, i: T) -> Option<&mut Self>{
                 match self {
                         $($ename::$tl(tensor) => {
-                            if stringify!(T) == stringify!($tl){
+
+
                             RefMut::map(tensor.borrow_mut(), |f|{
+                                    // satisfy type checker
                                     f.push(T::to::<$tl>(i));
                                     f
                                 });
                                 Option::Some(self)
-
-                            } else {
-                                Option::None
-                            }
                         },)+
                         #[allow(unreachable_patterns)] // Safety
                         _ => Option::None,
@@ -154,19 +151,34 @@ macro_rules! frame {
             fn len(&self) -> usize {
                 self.header.len() // header dictates size
             }
-            fn get(&self, s: String) -> Option<&Self::Typed> {
-                self.header.find(s).and_then(|i| self.data.get(i))
+            fn get(&self, s: &String) -> Option<&Self::Typed> {
+                self.header.find(s.clone()).and_then(|i| self.data.get(i))
             }
-            fn get_mut(&mut self, s: String) -> Option<&mut Self::Typed> {
-                self.header.find(s).and_then(|i| self.data.get_mut(i))
+            fn get_mut(&mut self, s: &String) -> Option<&mut Self::Typed> {
+                self.header.find(s.clone()).and_then(|i| self.data.get_mut(i))
             }
             fn push <T: crate::tensor::traits::dtype::dtype> (&mut self, s: String, item: T) -> Result<&mut Self, crate::tensor::error::DataFrameError> {
 
-                match self.get_mut(s.clone()) {
+                match self.get_mut(&s) {
                     Option::Some(ten) => {
                         if let Option::None = ten.push(item) {
+                            // push having error here
                             Err(crate::tensor::error::DataFrameError::Unknown)
                         } else {
+                            let t = self.header.into_iter().filter(|f|*f!=&s).map(|f|f.clone()).collect::<Vec<_>>();
+                            t.iter().for_each(|l|
+                                match self.get_mut(&l).unwrap() {
+                                    $($ename::$tl(tensor) => {
+
+                                        RefMut::map(tensor.borrow_mut(), |tp| {
+                                            tp.push($tl::default());
+                                            tp
+                                        });
+                                    }),+
+                                    #[allow(unreachable_patterns)] // Safety
+                                    _ => panic!("Critical Error!"),
+                                }
+                            );
                             Ok(self)
                         }
 
@@ -177,9 +189,9 @@ macro_rules! frame {
 
 
             }
-            fn extend <T: crate::tensor::traits::dtype::dtype> (&mut self, s: String, item: Vec<T>) -> Result<&mut Self, crate::tensor::error::DataFrameError> {
+            fn extend <T: crate::tensor::traits::dtype::dtype> (&mut self, s: &String, item: Vec<T>) -> Result<&mut Self, crate::tensor::error::DataFrameError> {
 
-                match self.get_mut(s.clone()) {
+                match self.get_mut(s) {
                     Option::Some(ten) => {
                         if let Option::None = ten.extend(item) {
                             Err(crate::tensor::error::DataFrameError::Unknown)
@@ -189,7 +201,7 @@ macro_rules! frame {
                         }
 
                     },
-                    Option::None => Err(crate::tensor::error::DataFrameError::UnknownCol{c1:s})
+                    Option::None => Err(crate::tensor::error::DataFrameError::UnknownCol{c1:s.clone()})
                 }
 
 
@@ -204,7 +216,7 @@ macro_rules! frame {
         impl <'a, $($tl:crate::tensor::traits::dtype::dtype,)+> std::ops::Index<String> for $name<'a, $($tl,)+>{
             type Output = $ename<'a, $($tl,)+>;
             fn index(&self, s: String) -> &Self::Output {
-                self.get(s).unwrap()
+                self.get(&s).unwrap()
             }
         }
 
@@ -237,6 +249,8 @@ mod tests {
         let mut t: Database<'_, TString, f32, i32> = Database::empty();
 
         let _ = t.push("Name".to_string(), tstring!("Hi"));
+        let _ = t.push("Age".to_string(), 0.111);
+        let _ = t.push("Age".to_string(), 0.11121);
 
         print!("{}", t);
     }
