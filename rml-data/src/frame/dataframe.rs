@@ -130,6 +130,24 @@ macro_rules! frame {
             data: Vec<$ename<'a, $($tl),+>>,
         }
 
+        impl<'a, $($tl:crate::tensor::traits::dtype::dtype,)+>  $name<'a, $($tl,)+> {
+            fn new($($tl: crate::tensor::shape::tensor::Tensor<'a, $tl>,)+) -> Self {
+                Self {
+                    data: vec![
+                        $( $ename::$tl(Rc::new(RefCell::new($tl))) ,)+
+                    ],
+                    header: crate::tensor::stringtensor::StringTensor::from(vec![$(stringify!($tl).to_string(),)+])
+                }
+            }
+            fn empty() -> Self {
+                Self {
+                    data: vec![
+                        $( $ename::$tl(Rc::new(RefCell::new(crate::tensor::shape::tensor::Tensor::<'a, $tl>::empty()))) ,)+
+                    ],
+                    header: crate::tensor::stringtensor::StringTensor::from(vec![$(stringify!($tl).to_string(),)+])
+                }
+            }
+        }
 
         impl<'a, $($tl:crate::tensor::traits::dtype::dtype,)+> DataFrame for $name<'a, $($tl,)+> {
             type Typed = $ename <'a, $($tl),+>;
@@ -201,4 +219,4 @@ macro_rules! frame {
 }
 
 //frame!(frame Df DfEnum (T, A));
-frame!(frame Df DfEnum (Cash, A, Bag, Snack));
+frame!(frame Df DfEnum (Birthday, A, Bag, Snack));

@@ -36,8 +36,13 @@ where
             phn: PhantomData,
         }
     }
+    pub fn empty() -> Self {
+        Tensor {
+            data: vec![],
+            phn: PhantomData,
+        }
+    }
 
-    
     // range index
     pub(crate) fn data_range_index(&self, r: Range<usize>) -> Option<&[T]> {
         match self.data.as_slice().get(r) {
