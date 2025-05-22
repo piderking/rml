@@ -1,4 +1,5 @@
 use std::{
+    fmt::Display,
     ops::{Index, IndexMut, Range},
     slice::Iter,
 };
@@ -78,5 +79,19 @@ impl<'a> IntoIterator for &'a StringTensor {
 
     fn into_iter(self) -> Self::IntoIter {
         self.data.iter()
+    }
+}
+
+impl Display for StringTensor {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(
+            f,
+            "[{}]",
+            self.data
+                .iter()
+                .map(|f| format!("{}", f))
+                .collect::<Vec<_>>()
+                .join(",  ")
+        )
     }
 }

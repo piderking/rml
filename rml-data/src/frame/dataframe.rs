@@ -39,12 +39,20 @@ macro_rules! frame {
 
         impl <'a, $($tl: crate::tensor::traits::dtype::dtype),+> FrameTyped for $ename <'a, $($tl),+>{
 
-
         }
 
 
         // Invoke Macro Above
         impl <'a, $($tl: crate::tensor::traits::dtype::dtype),+> $ename <'a, $($tl),+>{
+            pub fn to_string(&self) -> String {
+                match self {
+                        $($ename::$tl(tensor) => {
+                            format!("{}", tensor.borrow())
+                        },)+
+                        #[allow(unreachable_patterns)] // Safety
+                        _ => panic!("Critical Error!"),
+                    }
+            }
             $(
                 #[allow(non_snake_case)]
                 pub fn $tl (&self) -> Option<crate::tensor::shape::tensor::Tensor<'a, $tl>> {
@@ -200,6 +208,13 @@ macro_rules! frame {
             }
         }
 
+        impl <'a, $($tl:crate::tensor::traits::dtype::dtype,)+> std::fmt::Display for $name<'a, $($tl,)+>{
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(f, "{}", self.data.iter().enumerate().map(|(i, f)|format!("{}:{}", self.header.get(i).unwrap(), f.to_string())).collect::<Vec<_>>().join("\n"))
+            }
+        }
+
+
 
 
 
@@ -219,6 +234,10 @@ mod tests {
     pub fn macro_rules() {
         frame!(frame Database DataTyped (Name, Age, Size));
 
-        let t: Database<'_, i32, f32, TString> = Database::empty();
+        let mut t: Database<'_, TString, f32, i32> = Database::empty();
+
+        let _ = t.push("Name".to_string(), tstring!("Hi"));
+
+        print!("{}", t);
     }
 }
