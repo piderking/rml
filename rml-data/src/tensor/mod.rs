@@ -8,6 +8,7 @@ pub mod ops;
 pub mod shape;
 pub mod stringtensor;
 pub mod traits;
+pub mod types;
 //pub mod wrapper;
 #[cfg(test)]
 mod tests {

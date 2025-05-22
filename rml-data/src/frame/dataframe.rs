@@ -131,6 +131,8 @@ macro_rules! frame {
         }
 
         impl<'a, $($tl:crate::tensor::traits::dtype::dtype,)+>  $name<'a, $($tl,)+> {
+            
+            #[allow(non_snake_case)]
             fn new($($tl: crate::tensor::shape::tensor::Tensor<'a, $tl>,)+) -> Self {
                 Self {
                     data: vec![
