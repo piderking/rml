@@ -8,7 +8,7 @@ use crate::tensor::ops::{
     create::{Relu, Sigmoid},
     dtype::dtypeops,
 };
-
+use crate::tensor::types::tstring::TString;
 use super::super::len::TensorSize;
 
 // Trait Bound for primitives and objects
@@ -66,3 +66,17 @@ dtype!(f32, 0.0, {
         *self
     }
 });
+
+/*
+dtype!(TString, TString::new(), {
+    fn from_f32(f: f32) -> Self {
+            f
+    }
+        fn as_f32(&self) -> f32 {
+            *self
+        }
+})
+
+
+
+*/
