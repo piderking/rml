@@ -39,7 +39,7 @@ macro_rules! frame {
         use std::cell::RefCell;
         use std::cell::RefMut;
         use crate::tensor::traits::dtype::dtype;
-
+        use std::slice::Iter;
 
         use std::rc::Rc;
 
@@ -260,7 +260,26 @@ macro_rules! frame {
 
 
 
+        pub struct  FrameIterator <'a, $($tl:crate::tensor::traits::dtype::dtype,)+>  {
+            pub(super) place: usize,
+            pub(super) frame: Frame<'a, $($tl,)+>,
+        }
 
+        impl <'a, $($tl:crate::tensor::traits::dtype::dtype,)+> Iterator for FrameIterator<'a, $($tl,)+> {
+            type Item = Item<$($tl,)+>;
+
+            fn next(&mut self) -> Option<Self::Item> {
+                if self.place <= self.frame.len() {
+                    let t = Option::Some(self.frame.item(self.place));
+                    self.place += 1 as usize;
+                    t
+                } else {
+                    Option::None
+                }
+            }
+
+
+        }
 
         }
     };
