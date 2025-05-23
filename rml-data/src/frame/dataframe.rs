@@ -1,9 +1,11 @@
 use crate::tensor::traits::dtype::dtype;
 
 pub trait FrameTyped {}
+pub trait FrameItem {}
 
 pub trait DataFrame {
     type Typed: FrameTyped;
+    type Item: FrameItem;
 
     fn len(&self) -> usize;
     fn get(&self, s: &String) -> Option<&Self::Typed>;
@@ -19,6 +21,7 @@ pub trait DataFrame {
         item: Vec<T>,
     ) -> Result<&mut Self, crate::tensor::error::DataFrameError>;
     // fn extend <T: dtype>  (&mut self, )
+    fn item(&self, index: usize) -> Self::Item;
 }
 
 // frame!()
@@ -31,7 +34,7 @@ macro_rules! frame {
 
         pub mod $name {
 
-        use super::{DataFrame, FrameTyped};
+        use super::{DataFrame, FrameTyped, FrameItem};
         use crate::tensor::traits::tensor::TensorBound;
         use std::cell::RefCell;
         use std::cell::RefMut;
@@ -125,7 +128,14 @@ macro_rules! frame {
 
         }
 
-        pub struct Item {}
+        pub struct Item <$($tl:crate::tensor::traits::dtype::dtype),+>{
+            #[allow(non_snake_case)]
+            $($tl: $tl),+
+        }
+        impl <'a, $($tl: crate::tensor::traits::dtype::dtype),+> FrameItem for Item <$($tl),+>{
+
+        }
+
 
 
         /// THIS IS EPIC
@@ -160,9 +170,17 @@ macro_rules! frame {
 
         impl<'a, $($tl:crate::tensor::traits::dtype::dtype,)+> DataFrame for Frame<'a, $($tl,)+> {
             type Typed = Typed <'a, $($tl),+>;
+            type Item = Item<$($tl),+>;
             fn len(&self) -> usize {
                 self.header.len() // header dictates size
             }
+
+            fn item(&self, index:usize) -> Item<$($tl,)+> {
+                Item {
+                    $($tl:self.get(&stringify!($tl).to_string()).unwrap().to::<$tl>().unwrap().get(index).or_else(|| panic!("Index doesn't exsist")).unwrap().clone()),+
+                }
+            }
+
             fn get(&self, s: &String) -> Option<&Self::Typed> {
                 self.header.find(s.clone()).and_then(|i| self.data.get(i))
             }
