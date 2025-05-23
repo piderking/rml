@@ -39,7 +39,6 @@ macro_rules! frame {
         use std::cell::RefCell;
         use std::cell::RefMut;
         use crate::tensor::traits::dtype::dtype;
-        use std::slice::Iter;
 
         use std::rc::Rc;
 
@@ -277,6 +276,19 @@ macro_rules! frame {
                     Option::None
                 }
             }
+
+
+        }
+        impl <'a, $($tl:crate::tensor::traits::dtype::dtype,)+> IntoIterator for Frame<'a, $($tl,)+> {
+            type Item = Item<$($tl,)+>;
+            type IntoIter = FrameIterator<'a, $($tl,)+>;
+            fn into_iter(self) -> <Self as IntoIterator>::IntoIter {
+                Self::IntoIter {
+                    place: 0,
+                    frame: self
+                }
+            }
+
 
 
         }
