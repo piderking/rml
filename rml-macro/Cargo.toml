@@ -1,0 +1,15 @@
+[package]
+name = "rml-macro"
+version = "0.1.0"
+edition = "2024"
+description.workspace = true
+
+[dependencies]
+syn = "2.0"
+quote = "1.0"
+rml-data = { path = "../rml-data" }
+proc-macro2 = "1.0.95"
+enum-iterator = "2.1.0"
+
+[lib]
+proc-macro = true

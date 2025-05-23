@@ -22,8 +22,6 @@
         "key": "ctrl+shift+p",
         "command": "-workbench.action.showCommands"
     },
-
-
     {
         "key": "ctrl+n",
         "command": "explorer.newFile"
@@ -91,10 +89,6 @@
     {
         "key": "` f",
         "command": "workbench.action.findInFiles"
-    },
-    {
-        "key": "ctrl+shift+f",
-        "command": "-workbench.action.findInFiles"
     },
     {
         "key": "` p",
