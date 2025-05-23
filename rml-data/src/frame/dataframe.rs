@@ -1,9 +1,5 @@
 use crate::tensor::traits::dtype::dtype;
-use crate::tensor::traits::tensor::TensorBound;
-use std::cell::RefCell;
-use std::cell::RefMut;
 
-use std::rc::Rc;
 pub trait FrameTyped {}
 
 pub trait DataFrame {
@@ -30,22 +26,35 @@ pub trait DataFrame {
 #[macro_export]
 macro_rules! frame {
 
-    (frame $name:ident $ename:ident ($($tl: tt),+)) => {
-        pub enum $ename<'a, $($tl: crate::tensor::traits::dtype::dtype),+> {
+
+    (frame $name:ident ($($tl: tt),+)) => {
+
+        pub mod $name {
+
+        use super::{DataFrame, FrameTyped};
+        use crate::tensor::traits::tensor::TensorBound;
+        use std::cell::RefCell;
+        use std::cell::RefMut;
+        use crate::tensor::traits::dtype::dtype;
+
+
+        use std::rc::Rc;
+
+        pub enum Typed<'a, $($tl: crate::tensor::traits::dtype::dtype),+> {
             // TODO Make into RefCell
             $($tl(Rc<RefCell<crate::tensor::shape::tensor::Tensor<'a, $tl>>>),)+
         }
 
-        impl <'a, $($tl: crate::tensor::traits::dtype::dtype),+> FrameTyped for $ename <'a, $($tl),+>{
+        impl <'a, $($tl: crate::tensor::traits::dtype::dtype),+> FrameTyped for Typed <'a, $($tl),+>{
 
         }
 
 
         // Invoke Macro Above
-        impl <'a, $($tl: crate::tensor::traits::dtype::dtype),+> $ename <'a, $($tl),+>{
+        impl <'a, $($tl: crate::tensor::traits::dtype::dtype),+> Typed <'a, $($tl),+>{
             pub fn to_string(&self) -> String {
                 match self {
-                        $($ename::$tl(tensor) => {
+                        $(Typed::$tl(tensor) => {
                             format!("{}", tensor.borrow())
                         },)+
                         #[allow(unreachable_patterns)] // Safety
@@ -56,7 +65,7 @@ macro_rules! frame {
                 #[allow(non_snake_case)]
                 pub fn $tl (&self) -> Option<crate::tensor::shape::tensor::Tensor<'a, $tl>> {
                     match self {
-                        $ename::$tl(tensor) => Option::Some(tensor.clone().borrow().clone()),
+                        Typed::$tl(tensor) => Option::Some(tensor.clone().borrow().clone()),
                         _ => Option::None,
                     }
                 }
@@ -64,7 +73,7 @@ macro_rules! frame {
 
             pub fn to <T: crate::tensor::traits::dtype::dtype> (&self) -> Option<crate::tensor::shape::tensor::Tensor<'a, T>>{
                 match self {
-                        $($ename::$tl(tensor) => {
+                        $(Typed::$tl(tensor) => {
                             if stringify!(T) == stringify!($tl){
                                 Option::Some(crate::tensor::change::DtypeChange(tensor.clone().borrow().clone()).into())
                             } else {
@@ -77,7 +86,7 @@ macro_rules! frame {
             }
             pub fn push <T: crate::tensor::traits::dtype::dtype> (&mut self, i: T) -> Option<&mut Self>{
                 match self {
-                        $($ename::$tl(tensor) => {
+                        $(Typed::$tl(tensor) => {
 
 
                             RefMut::map(tensor.borrow_mut(), |f|{
@@ -94,7 +103,7 @@ macro_rules! frame {
 
             pub fn extend <T: crate::tensor::traits::dtype::dtype> (&mut self, i: Vec<T>) -> Option<&mut Self>{
                 match self {
-                        $($ename::$tl(tensor) => {
+                        $(Typed::$tl(tensor) => {
                             if stringify!(T) == stringify!($tl){
                             RefMut::map(tensor.borrow_mut(), |f|{
                                 for it in i {
@@ -116,38 +125,41 @@ macro_rules! frame {
 
         }
 
+        pub struct Item {}
 
-        pub struct $name<'a, $($tl:crate::tensor::traits::dtype::dtype,)+> {
+
+        /// THIS IS EPIC
+        pub struct Frame<'a, $($tl:crate::tensor::traits::dtype::dtype,)+> {
             header: crate::tensor::stringtensor::StringTensor,
-            data: Vec<$ename<'a, $($tl),+>>,
+            data: Vec<Typed<'a, $($tl),+>>,
         }
 
-        impl<'a, $($tl:crate::tensor::traits::dtype::dtype,)+>  $name<'a, $($tl,)+> {
+        impl<'a, $($tl:crate::tensor::traits::dtype::dtype,)+> Frame<'a, $($tl,)+> {
 
             #[allow(non_snake_case)]
             #[allow(unused)]
             fn new($($tl: crate::tensor::shape::tensor::Tensor<'a, $tl>,)+) -> Self {
                 Self {
                     data: vec![
-                        $( $ename::$tl(Rc::new(RefCell::new($tl))) ,)+
+                        $( Typed::$tl(Rc::new(RefCell::new($tl))) ,)+
                     ],
                     header: crate::tensor::stringtensor::StringTensor::from(vec![$(stringify!($tl).to_string(),)+])
                 }
             }
 
             #[allow(unused)]
-            fn empty() -> Self {
+            pub fn empty() -> Self {
                 Self {
                     data: vec![
-                        $( $ename::$tl(Rc::new(RefCell::new(crate::tensor::shape::tensor::Tensor::<'a, $tl>::empty()))) ,)+
+                        $( Typed::$tl(Rc::new(RefCell::new(crate::tensor::shape::tensor::Tensor::<'a, $tl>::empty()))) ,)+
                     ],
                     header: crate::tensor::stringtensor::StringTensor::from(vec![$(stringify!($tl).to_string(),)+])
                 }
             }
         }
 
-        impl<'a, $($tl:crate::tensor::traits::dtype::dtype,)+> DataFrame for $name<'a, $($tl,)+> {
-            type Typed = $ename <'a, $($tl),+>;
+        impl<'a, $($tl:crate::tensor::traits::dtype::dtype,)+> DataFrame for Frame<'a, $($tl,)+> {
+            type Typed = Typed <'a, $($tl),+>;
             fn len(&self) -> usize {
                 self.header.len() // header dictates size
             }
@@ -157,6 +169,8 @@ macro_rules! frame {
             fn get_mut(&mut self, s: &String) -> Option<&mut Self::Typed> {
                 self.header.find(s.clone()).and_then(|i| self.data.get_mut(i))
             }
+
+            // TODO make collumn container for
             fn push <T: crate::tensor::traits::dtype::dtype> (&mut self, s: String, item: T) -> Result<&mut Self, crate::tensor::error::DataFrameError> {
 
                 match self.get_mut(&s) {
@@ -168,7 +182,7 @@ macro_rules! frame {
                             let t = self.header.into_iter().filter(|f|*f!=&s).map(|f|f.clone()).collect::<Vec<_>>();
                             t.iter().for_each(|l|
                                 match self.get_mut(&l).unwrap() {
-                                    $($ename::$tl(tensor) => {
+                                    $(Typed::$tl(tensor) => {
 
                                         RefMut::map(tensor.borrow_mut(), |tp| {
                                             tp.push($tl::default());
@@ -213,14 +227,14 @@ macro_rules! frame {
 
         }
 
-        impl <'a, $($tl:crate::tensor::traits::dtype::dtype,)+> std::ops::Index<String> for $name<'a, $($tl,)+>{
-            type Output = $ename<'a, $($tl,)+>;
+        impl <'a, $($tl:crate::tensor::traits::dtype::dtype,)+> std::ops::Index<String> for Frame<'a, $($tl,)+>{
+            type Output = Typed<'a, $($tl,)+>;
             fn index(&self, s: String) -> &Self::Output {
                 self.get(&s).unwrap()
             }
         }
 
-        impl <'a, $($tl:crate::tensor::traits::dtype::dtype,)+> std::fmt::Display for $name<'a, $($tl,)+>{
+        impl <'a, $($tl:crate::tensor::traits::dtype::dtype,)+> std::fmt::Display for Frame<'a, $($tl,)+>{
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                 write!(f, "{}", self.data.iter().enumerate().map(|(i, f)|format!("{}:{}", self.header.get(i).unwrap(), f.to_string())).collect::<Vec<_>>().join("\n"))
             }
@@ -230,7 +244,7 @@ macro_rules! frame {
 
 
 
-
+        }
     };
 
 
@@ -244,9 +258,9 @@ mod tests {
 
     #[test]
     pub fn macro_rules() {
-        frame!(frame Database DataTyped (Name, Age, Size));
+        frame!(frame database (Name, Age, Size));
 
-        let mut t: Database<'_, TString, f32, i32> = Database::empty();
+        let mut t: database::Frame<'_, TString, f32, i32> = database::Frame::empty();
 
         let _ = t.push("Name".to_string(), tstring!("Hi"));
         let _ = t.push("Age".to_string(), 0.111);
