@@ -1,5 +1,5 @@
+use std::fmt::Debug;
 use std::fmt::Display;
-
 #[derive(Clone)]
 pub struct TString(String);
 
@@ -36,5 +36,10 @@ macro_rules! tstring {
 impl Display for TString {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", <TString as Into<String>>::into(self.clone()))
+    }
+}
+impl Debug for TString {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0)
     }
 }

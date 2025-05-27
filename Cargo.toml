@@ -2,4 +2,4 @@
 resolver = "2"
 
 package.description = "Rust Machine Learning Library"
-members = ["rml", "rml-data", "rml-macro", "rml-math"]
+members = ["rml", "rml-data", "rml-macro", "rml-math", "rml-ml"]

@@ -15,12 +15,14 @@ pub trait DataFrame {
         s: String,
         item: T,
     ) -> Result<&mut Self, crate::tensor::error::DataFrameError>;
+    fn push_unchecked<T: dtype>(&mut self, s: String, item: T) -> ();
     fn extend<T: dtype>(
         &mut self,
         s: &String,
         item: Vec<T>,
     ) -> Result<&mut Self, crate::tensor::error::DataFrameError>;
     // fn extend <T: dtype>  (&mut self, )
+    fn add(&mut self, item: Self::Item) -> &mut Self;
     fn item(&self, index: usize) -> Self::Item;
 }
 
@@ -127,13 +129,22 @@ macro_rules! frame {
 
         }
 
+        #[derive(Debug)]
         pub struct Item <$($tl:crate::tensor::traits::dtype::dtype),+>{
             #[allow(non_snake_case)]
             $($tl: $tl),+
         }
+        impl <'a, $($tl: crate::tensor::traits::dtype::dtype),+> Item <$($tl),+>{
+            pub fn new($($tl: $tl),+) -> Self {
+                Self {
+                    $($tl:$tl),+
+                }
+            }
+        }
         impl <'a, $($tl: crate::tensor::traits::dtype::dtype),+> FrameItem for Item <$($tl),+>{
 
         }
+
 
 
 
@@ -187,7 +198,27 @@ macro_rules! frame {
                 self.header.find(s.clone()).and_then(|i| self.data.get_mut(i))
             }
 
-            // TODO make collumn container for
+            fn add(&mut self, item: Self::Item) -> &mut Self{
+
+                $(
+                    self.get_mut(&stringify!($tl).to_string()).unwrap().push(item.$tl);
+                )+
+                self
+
+
+            }
+
+            fn push_unchecked <T: crate::tensor::traits::dtype::dtype> (&mut self, s: String, item: T) -> () {
+                match self.push(s, item) {
+                    Ok(_n) => (),
+                    Err(t) => {
+                        println!("{:?}", t);
+                        panic!("Push unchecked threw an error!")
+
+                    }
+                }
+            }
+
             fn push <T: crate::tensor::traits::dtype::dtype> (&mut self, s: String, item: T) -> Result<&mut Self, crate::tensor::error::DataFrameError> {
 
                 match self.get_mut(&s) {
@@ -306,7 +337,7 @@ mod tests {
     use crate::{tensor::types::tstring::TString, tstring};
 
     #[test]
-    pub fn macro_rules() {
+    pub fn frame_ops() {
         frame!(frame database (Name, Age, Size));
 
         let mut t: database::Frame<'_, TString, f32, i32> = database::Frame::empty();
@@ -316,5 +347,19 @@ mod tests {
         let _ = t.push("Age".to_string(), 0.11121);
 
         print!("{}", t);
+    }
+    #[test]
+    pub fn frame_iter() {
+        frame!(frame database (Name, Size, Age));
+
+        let mut t: database::Frame<'_, TString, f32, i32> = database::Frame::empty();
+
+        t.add(database::Item::new(
+            stringify!(Peter).to_string().into(),
+            190.9,
+            17,
+        ));
+
+        print!("{:?}", t.into_iter().collect::<Vec<_>>());
     }
 }
