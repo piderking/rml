@@ -1,59 +1,50 @@
 //pub trait Context {}
 
-pub trait Context {
-    fn next(&self) -> ();
+use rml_data::tensor::shape::tensor::Tensor;
+
+use crate::layers::{self, create::Layer};
+
+pub trait ContextFlag {
+    fn next(&mut self) -> ();
+}
+pub struct Input {}
+
+pub enum ContextState<'a> {
+    Input(Tensor<'a, f32>),
+    Layer(Box<dyn Layer<'a, f32, Output = Tensor<'a, f32>>>),
+    Output(Tensor<'a, f32>),
 }
 
-macro_rules! context {
-    ($name:ident<$ty:ty> -> [$($t:tt),+] use [$($p:path),*]) => {
-        pub mod $name {
-            use std::marker::PhantomData;
-            use super::Context as TraitContext;
-            type Default = $ty;
-            $(
-                use $p;
-            ),*
+pub struct ContextStruct<'a> {
+    position: usize,
+    layers: Vec<ContextState<'a>>,
+}
 
-            enum  Container <'a>{
-                $($t($t<'a, Default>)),+
-            }
-
-
-            $(
-                impl <'a> Into<Container<'a>> for $t<'a, Default> {
-                    fn into(self) -> Container<'a> {
-                        Container::$t(self)
-                    }
-
-                }
-            )+
-
-            
-
-            pub struct Context <'a> {
-                layer: Vec<Container<'a>>,
-                phn: PhantomData<&'a f32>
-            }
-            impl <'a> TraitContext for Context<'a> {
-                fn next(&self) -> () {
-                    todo!()
-                }
-            }
-            impl <'a> Context <'a> {
-                pub fn new(v: Vec<Container<'a>>) -> Self {
-                    Context { layer: v, phn: PhantomData}
-                }
-            }
-
+impl<'a> ContextStruct<'a> {
+    pub fn new(v: Vec<ContextState<'a>>) -> Self {
+        ContextStruct {
+            position: 0,
+            layers: v,
         }
-    };
+    }
 }
 
-context!(fun<f32> -> [Softmax] use [crate::layers::create::Softmax]);
-/*
-
-Context {
-
+impl<'a> ContextFlag for ContextStruct<'a> {
+    fn next(&mut self) -> () {
+        match self.layers.pop() {
+            Some(prev) => match self.layers.get_mut(0) {
+                Some(layer) => match (prev, layer) {
+                    (ContextState::Input(n), ContextState::Layer(a)) => todo!(),
+                    (ContextState::Input(n), ContextState::Output(a)) => todo!(),
+                    (ContextState::Input(n), _) => panic!("Only 1 Input!"),
+                    (ContextState::Layer(n), ContextState::Layer(a)) => todo!(),
+                    (ContextState::Layer(n), ContextState::Output(a)) => todo!(),
+                    (_, ContextState::Input(ns)) => panic!("Input must only be first!"),
+                    (ContextState::Output(n), _) => panic!("Out must be last"),
+                },
+                None => (),
+            },
+            None => (),
+        };
+    }
 }
-
-*/
