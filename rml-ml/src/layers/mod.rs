@@ -12,6 +12,5 @@ trait Deep
 */
 
 pub mod create;
-pub mod deep;
 pub mod softmax;
 pub mod temp;

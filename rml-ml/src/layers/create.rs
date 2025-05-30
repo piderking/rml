@@ -3,13 +3,11 @@ use rml_data::tensor::traits::dtype::dtype;
 use rml_data::tensor::traits::tensor::TensorBound;
 
 use crate::context::ContextStruct;
-use crate::contextual::Contextual;
-
 pub trait Layer<'a, T: dtype> {
     type Output: TensorBound;
 
     fn fill(&mut self, t: Tensor<'a, T>) -> ();
-    fn layer(&self, ctx: Contextual) -> Self::Output;
+    fn forward(&self) -> Self::Output;
 }
 pub trait Empty {
     fn empty() -> Self;

@@ -5,26 +5,17 @@ use rml_data::tensor::{
     traits::{dtype::dtype, tensor::TensorBound},
 };
 
-use crate::{
-    contextual::Contextual,
-    layers::{self, create::Layer},
-};
+use crate::layers::create::Layer;
 
-pub trait ContextFlag<'a> {
+pub trait Model<'a> {
     type Output: TensorBound;
     fn next(&mut self) -> Option<Self::Output>;
 }
-pub struct Input {}
 
 pub enum ContextState<'a> {
     Input(Tensor<'a, f32>),
     Layer(Box<dyn Layer<'a, f32, Output = Tensor<'a, f32>>>),
     Output(),
-}
-impl<'a> ContextState<'a> {
-    pub fn context(&self) -> Contextual {
-        Contextual::new(1.0)
-    }
 }
 
 pub struct ContextStruct<'a> {
@@ -33,21 +24,15 @@ pub struct ContextStruct<'a> {
 }
 
 impl<'a> ContextStruct<'a> {
-    pub fn new() -> Self {
+    pub fn new(v: Vec<ContextState<'a>>) -> Self {
         ContextStruct {
             position: 0,
-            layers: vec![],
+            layers: v,
         }
-    }
-    pub fn fill(&mut self, v: Vec<ContextState<'a>>) -> () {
-        self.layers = v;
-    }
-    pub fn prev(&self) -> Tensor<'a, f32> {
-        todo!()
     }
 }
 
-impl<'a> ContextFlag<'a> for ContextStruct<'a> {
+impl<'a> Model<'a> for ContextStruct<'a> {
     type Output = Tensor<'a, f32>;
     fn next(&mut self) -> Option<Self::Output> {
         match self.layers.pop() {

@@ -3,8 +3,6 @@ use rml_data::tensor::{
     traits::{dtype::dtype, tensor::TensorBound},
 };
 
-use crate::contextual::Contextual;
-
 use super::create::{Empty, Layer, Temp};
 
 impl<'a, T: dtype> Layer<'a, T> for Temp<'a, T> {
@@ -14,10 +12,8 @@ impl<'a, T: dtype> Layer<'a, T> for Temp<'a, T> {
         self.tensor = t;
     }
 
-    fn layer(&self, ctx: Contextual) -> Self::Output {
-        self.tensor
-            .clone()
-            .apply(|f| T::from_f32(f.as_f32() + ctx.digit))
+    fn forward(&self) -> Self::Output {
+        self.tensor.clone().apply(|f| T::from_f32(f.as_f32() + 1.0))
     }
 }
 

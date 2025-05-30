@@ -1,5 +1,4 @@
-use crate::context::{ContextFlag, ContextStruct};
-use crate::contextual::Contextual;
+use crate::context::{ContextStruct, Model};
 
 use super::create::{Deep, Empty, Layer, Softmax};
 use rml_data::tensor::ops::create::Softmax as Sft;
@@ -8,7 +7,7 @@ use rml_data::tensor::{shape::tensor::Tensor, traits::dtype::dtype};
 impl<'a, T: dtype> Layer<'a, T> for Softmax<'a, T> {
     type Output = Tensor<'a, T>;
 
-    fn layer(&self, ctx: Contextual) -> Self::Output {
+    fn forward(&self) -> Self::Output {
         <Tensor<'a, T> as Sft>::softmax(&self.tensor)
     }
 
