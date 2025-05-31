@@ -8,18 +8,21 @@ use super::create::Layer;
 pub struct Temp {
     bias: f32,
 }
-impl<'a, T: dtype> Layer<'a, T> for Temp<'a, T> {
+
+impl Temp {
+    pub fn new(b: f32) -> Box<Self> {
+        Box::new(Temp {
+            bias: b
+        })
+    }
+}
+
+impl<'a, T: dtype + 'a> Layer<'a, T> for Temp {
     type Output = Tensor<'a, T>;
-
-    fn forward(&self) -> Self::Output {
-        self.tensor.clone().apply(|f| T::from_f32(f.as_f32() + 1.0))
+    
+    fn forward(&self, tensor: Tensor<'a, T>) -> Self::Output {
+        tensor.apply(|f| f.clone() + T::from_f32(self.bias))
     }
+
 }
 
-impl<'a, T: dtype> Empty for Temp<'a, T> {
-    fn empty() -> Self {
-        Self {
-            tensor: Tensor::empty(),
-        }
-    }
-}

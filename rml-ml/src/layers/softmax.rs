@@ -3,8 +3,15 @@ use rml_data::tensor::{shape::tensor::Tensor, traits::dtype::dtype};
 
 use super::create::Layer;
 
+#[derive(Debug)]
 pub struct Softmax {}
-impl<'a, T: dtype> Layer<'a, T> for Softmax {
+impl Softmax {
+    pub fn new() -> Box<Self> {
+        Box::new(Softmax {  })
+    }
+}
+
+impl<'a, T: dtype + 'a> Layer<'a, T> for Softmax {
     type Output = Tensor<'a, T>;
 
     fn forward(&self, tensor: Tensor<'a, T>) -> Self::Output {
