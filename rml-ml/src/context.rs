@@ -9,79 +9,38 @@ use crate::layers::create::Layer;
 
 pub trait Model<'a> {
     type Output: TensorBound;
-    fn next(&mut self) -> Option<Self::Output>;
+    fn forward(&mut self) -> &mut Self;
 }
 
-pub enum ContextState<'a> {
-    Input(Tensor<'a, f32>),
+pub enum LayerState<'a> {
+    Input(),
     Layer(Box<dyn Layer<'a, f32, Output = Tensor<'a, f32>>>),
     Output(),
 }
 
-pub struct ContextStruct<'a> {
+pub struct Linear<'a> {
     position: usize,
-    layers: Vec<ContextState<'a>>,
+    layers: Vec<LayerState<'a>>,
 }
 
-impl<'a> ContextStruct<'a> {
-    pub fn new(v: Vec<ContextState<'a>>) -> Self {
-        ContextStruct {
+impl<'a> Linear<'a> {
+    pub fn new(mut layers: Vec<LayerState<'a>>) -> Self {
+        layers.insert(0, LayerState::Input());
+        layers.push(LayerState::Output());
+        Linear {
             position: 0,
-            layers: v,
+            layers: layers,
         }
     }
 }
-
-impl<'a> Model<'a> for ContextStruct<'a> {
+impl<'a> Model<'a> for Linear<'a> {
     type Output = Tensor<'a, f32>;
-    fn next(&mut self) -> Option<Self::Output> {
-        match self.layers.pop() {
-            Some(prev) => match self.layers.get_mut(0) {
-                Some(layer) => match (prev, layer) {
-                    (ContextState::Input(n), ContextState::Layer(a)) => {
-                        a.fill(n);
-                        a.layer(prev.context());
-                        Option::None
-                    }
-                    (ContextState::Input(n), ContextState::Output()) => {
-                        // TODO --> Return Here
-                        Option::Some(n)
-                    }
-                    (ContextState::Input(n), _) => panic!("Only 1 Input!"),
-                    (ContextState::Layer(n1), ContextState::Layer(n2)) => {
-                        n2.fill(n1.layer(prev.context()));
-                        Option::None
-                    }
-                    (ContextState::Layer(n), ContextState::Output()) => {
-                        Option::Some(n.layer(prev.context()))
-                    }
-                    (_, ContextState::Input(ns)) => panic!("Input must only be first!"),
-                    (ContextState::Output(), _) => panic!("Out must be last"),
-                },
-                None => {
-                    panic!("How did you get here? Like holy shit")
-                }
-            },
-            None => panic!("Context Must Include an Output"),
-        }
-    }
-}
 
-#[cfg(test)]
-pub mod test {
-    use rml_data::tensorm;
+    fn forward(&mut self) -> &mut Self {
+        match (self.position, self.layers.get_mut(self.position)) {
+            (0, LayerState::Input())
+        };
 
-    use super::{ContextState, ContextStruct};
-    use crate::layers::create::{Empty, Temp};
-    use rml_data::tensor::shape::tensor::Tensor;
-
-    #[test]
-    pub fn context() -> () {
-        let mut t = ContextStruct::new();
-
-        t.fill(vec![
-            ContextState::Input(Tensor::empty()),
-            ContextState::Layer(Box::new(Temp::empty())),
-        ]);
+        self
     }
 }
