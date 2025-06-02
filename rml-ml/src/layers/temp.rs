@@ -3,6 +3,8 @@ use rml_data::tensor::{
     traits::{dtype::dtype, tensor::TensorBound},
 };
 
+use crate::empty::Empty;
+
 use super::create::Layer;
 
 pub struct Temp {
@@ -23,6 +25,19 @@ impl<'a, T: dtype + 'a> Layer<'a, T> for Temp {
     fn forward(&self, tensor: Tensor<'a, T>) -> Self::Output {
         tensor.apply(|f| f.clone() + T::from_f32(self.bias))
     }
+    
+    fn fill(&mut self, arg: super::create::LayerArgument<'a, T>) -> () {
+        todo!()
+    }
+    
+    
 
 }
 
+impl Empty for Temp {
+    fn empty() -> Self {
+        Temp {
+            bias: 0.0
+        }
+    }
+}

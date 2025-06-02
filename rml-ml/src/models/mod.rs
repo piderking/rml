@@ -14,7 +14,7 @@ mod tests {
     #[test]
     fn test() -> () {
         
-        let mut t = Linear::new(vec![LayerState::Layer(Temp::new(1.0)), ]);
+        let mut t = Linear::new(vec![LayerState::Layer(Temp::new(1.0)),  LayerState::Layer(Softmax::new())]);
 
         let fin = t.model(vec![tensorm![1.0, 0.1, 1.0]]);
 
