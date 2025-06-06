@@ -48,7 +48,7 @@ where
     }
     pub fn with_capacity(size: usize, val: T) -> Self {
         Tensor {
-            data: Vec::with_capacity(size).iter().map(|_: &T| val.clone()).collect(),
+            data: (0..size).into_iter().map(|_f|val.clone()).collect::<Vec<_>>(),
             phn: PhantomData,
         }
     }
