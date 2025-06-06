@@ -23,3 +23,4 @@ pub trait Layer<'a, T: dtype> {
     fn fill(&mut self, arg: LayerArgument<'a, T>) -> ();
 
 }
+
