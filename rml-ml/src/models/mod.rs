@@ -34,11 +34,11 @@ mod tests {
     }
     #[test]
     fn empty_deep_test() -> () {
-        
+        let deep = Deep::new(tensorm!(0.25, 0.9, 0.1), tensorm!(0.0, 0.0, 0.0));
         let input = tensorm!(0.0, 1.0, 0.0);
-        let mut t = Linear::new(vec![LayerState::Layer(Temp::empty(&input)),  LayerState::Layer(Deep::empty(&input)),  LayerState::Layer(Softmax::empty(&input))]);
+        let mut t = Linear::new(vec![LayerState::Layer(Temp::empty(&input)),  LayerState::Layer(deep),  LayerState::Layer(Softmax::empty(&input))]);
 
-        let fin = t.model(vec![tensorm![1.0, 0.1, 1.0]]);
+        let fin = t.model(vec![tensorm![0.0, 1.1, 1.0]]);
 
         println!("{:}", fin)
     }
