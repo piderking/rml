@@ -4,8 +4,8 @@ use rml_data::tensor::traits::tensor::TensorBound;
 
 
 pub struct WB <'a, T: dtype> {
-    weight: Tensor<'a, T>,
-    bias: Tensor<'a, T>
+    pub weight: Tensor<'a, T>,
+    pub bias: Tensor<'a, T>
 }
 
 

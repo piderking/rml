@@ -43,7 +43,9 @@ where
         }
         
     }
-
+    pub fn to <U: dtype> (&self) -> Tensor<'a, U> {
+        self.into_iter().map(|t|U::from_f32(t.clone().as_f32())).collect::<Vec<U>>().into()
+    }
     pub fn with_capacity(size: usize, val: T) -> Self {
         Tensor {
             data: Vec::with_capacity(size).iter().map(|_: &T| val.clone()).collect(),
@@ -58,6 +60,7 @@ where
         }
         t
     }
+    
 }
 
 // eq
