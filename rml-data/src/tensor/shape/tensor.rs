@@ -41,21 +41,13 @@ where
             data: vec![],
             phn: PhantomData,
         }
+        
     }
 
-    // range index
-    pub(crate) fn data_range_index(&self, r: Range<usize>) -> Option<&[T]> {
-        match self.data.as_slice().get(r) {
-            Some(n) => Some(n),
-            None => None,
-        }
-    }
-
-    // range mut index
-    pub(crate) fn data_mut_range_index(&mut self, r: Range<usize>) -> Option<&mut [T]> {
-        match self.data.as_mut_slice().get_mut(r) {
-            Some(n) => Some(n),
-            None => None,
+    pub fn with_capacity(size: usize, val: T) -> Self {
+        Tensor {
+            data: Vec::with_capacity(size).iter().map(|_: &T| val.clone()).collect(),
+            phn: PhantomData,
         }
     }
 

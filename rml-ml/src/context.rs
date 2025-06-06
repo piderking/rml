@@ -14,7 +14,7 @@ pub trait Model<'a> {
 
 pub enum LayerState<'a> {
     Input(usize),
-    Layer(Box<dyn Layer<'a, f32, Input = Option<f32>, Output = Tensor<'a, f32>>>),
+    Layer(Box<dyn Layer<'a, f32, Output = Tensor<'a, f32>>>),
     Output(),
 }
 

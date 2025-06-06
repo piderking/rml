@@ -14,8 +14,8 @@ use super::create::Layer;
 #[derive(Debug)]
 pub struct Softmax {}
 impl Softmax {
-    pub fn new() -> Self{
-        Softmax {  }
+    pub fn new() -> Box<Softmax>{
+        Box::new(Softmax {  })
     }
 }
 
@@ -26,15 +26,15 @@ impl<'a, T: dtype + 'a> Layer<'a, T> for Softmax {
         <Tensor<'a, T> as Sft>::softmax(&tensor)
     }
     
-    fn fill(&mut self, arg: super::create::LayerArgument<'a, T>) -> () {
-        todo!()
+    fn fill(&mut self, _arg: super::create::LayerArgument<'a, T>) -> () {
+        
     }
     
 
 }
 
-impl Empty for Softmax {
-    fn empty() -> Self {
-        Softmax {  }
+impl <'a> Empty <'a> for Softmax {
+    fn empty(_ten: &Tensor<'a, f32>) -> Box<Self> {
+        Box::new(Softmax {  })
     }
 }

@@ -1,3 +1,7 @@
-pub trait Empty {
-    fn empty() -> Self;
+use rml_data::tensor::shape::tensor::Tensor;
+
+
+
+pub trait Empty <'a>{
+fn empty(ten: &Tensor<'a, f32>) -> Box<Self>;
 }

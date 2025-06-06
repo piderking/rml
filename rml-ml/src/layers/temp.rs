@@ -34,10 +34,12 @@ impl<'a, T: dtype + 'a> Layer<'a, T> for Temp {
 
 }
 
-impl Empty for Temp {
-    fn empty() -> Self {
-        Temp {
+impl <'a> Empty <'a> for Temp {
+
+    // needs the model input the layer should account for
+    fn empty(_ten: &Tensor<'a, f32>) -> Box<Self> {
+        Box::new(Temp {
             bias: 0.0
-        }
+        })
     }
 }
