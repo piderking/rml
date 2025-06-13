@@ -34,7 +34,7 @@ impl<'a, T: dtype + 'a> Layer<'a, T> for Softmax {
 }
 
 impl <'a> Empty <'a> for Softmax {
-    fn empty(_ten: &Tensor<'a, f32>) -> Box<Self> {
+    fn empty(_ten: usize) -> Box<Self> {
         Box::new(Softmax {  })
     }
 }

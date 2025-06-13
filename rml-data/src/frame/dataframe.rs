@@ -149,6 +149,7 @@ macro_rules! frame {
 
 
         /// THIS IS EPIC
+        
         pub struct Frame<'a, $($tl:crate::tensor::traits::dtype::dtype,)+> {
             header: crate::tensor::stringtensor::StringTensor,
             data: Vec<Typed<'a, $($tl),+>>,
@@ -289,7 +290,6 @@ macro_rules! frame {
         }
 
 
-
         pub struct  FrameIterator <'a, $($tl:crate::tensor::traits::dtype::dtype,)+>  {
             pub(super) place: usize,
             pub(super) frame: Frame<'a, $($tl,)+>,
@@ -360,6 +360,5 @@ mod tests {
             17,
         ));
 
-        print!("{:?}", t.into_iter().collect::<Vec<_>>());
     }
 }

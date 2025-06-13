@@ -24,4 +24,5 @@ impl <'a,> Into<LayerState<'a>> for Box<dyn Layer<'a, f32,  Output = Tensor<'a, 
 pub mod create;
 pub mod softmax;
 pub mod temp;
+pub mod shallow;
 pub mod deep;

@@ -3,3 +3,4 @@ pub mod layers;
 pub mod models;
 pub mod empty;
 pub mod loss;
+pub mod optimizers;

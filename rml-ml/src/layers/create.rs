@@ -17,7 +17,7 @@ pub enum LayerArgument <'a, T: dtype> {
 }
 
 pub trait Layer<'a, T: dtype> {
-    type Output: TensorBound;
+    type Output;
 
     fn forward(&self, tensor: Tensor<'a, T>) -> Self::Output;
     fn fill(&mut self, arg: LayerArgument<'a, T>) -> ();
