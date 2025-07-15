@@ -34,8 +34,21 @@ impl<'a, T: dtype + 'a> Layer<'a, T> for Deep<'a> {
         }).collect::<Vec<_>>()
         ) */
 
+        // Inital x Weight X Bias in All Respect Orginizations
+         Tensor::<T>::from(
+            tensor.into_iter().zip(self.weight.clone().into_iter()).zip(self.bias.clone().into_iter()).map(|((i, w), b)| {
+            let mut f = i.as_f32();
+
+            w.into_iter().zip(b.into_iter()).for_each(|(w, b)| {
+                f = f * w + b;
+            });
+
+            T::from_f32(f)
+
+         }).collect::<Vec<_>>()
+         )
+
         // apply weights and biases to original vector
-        tensor    
     
     }
     
