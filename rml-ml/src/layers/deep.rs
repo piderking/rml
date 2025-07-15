@@ -24,7 +24,7 @@ impl <'a> Deep <'a>{
 }
 
 impl<'a, T: dtype + 'a> Layer<'a, T> for Deep<'a> {
-    type Output = Vec<Tensor<'a, T>>;
+    type Output = Tensor<'a, T>;
     
     fn forward(&self, tensor: Tensor<'a, T>) -> Self::Output {
         /*Tensor::<T>::from(
@@ -34,10 +34,9 @@ impl<'a, T: dtype + 'a> Layer<'a, T> for Deep<'a> {
         }).collect::<Vec<_>>()
         ) */
 
-       self.weight.clone().into_iter().zip(self.bias.clone().into_iter()).map(|(weight, bias)|{
-        izip!(&tensor, &weight, &bias).map(|(i, w, b)| T::from_f32((i.clone().as_f32()*w.clone()) + b.clone())).collect::<Vec<T>>().into()
-
-       }).collect::<Vec<_>>()
+        // apply weights and biases to original vector
+        tensor    
+    
     }
     
     fn fill(&mut self, arg:LayerArgument<'a, T>) -> () {

@@ -24,7 +24,6 @@ pub enum Keys {
     SHIFT,
     ALT,
     CAPSLOCK,
-    
 }
 impl Bind {
     pub fn new(symbol: char) -> Bind {
@@ -56,5 +55,17 @@ impl Default for Bind {
 }
 
 
+impl ToString for Bind {
+    fn to_string(&self) -> String {
+        let mut s = String::new();
 
+        s.push(unsafe { char::from_u32_unchecked(self.CTRL as u32) });
+        s.push(unsafe { char::from_u32_unchecked(self.SHIFT as u32) });
+        s.push(unsafe { char::from_u32_unchecked(self.ALT as u32) });
+        s.push(unsafe { char::from_u32_unchecked(self.CAPSLOCK as u32) });
+        s.push(self.symbol);
+        
+        s
+    }
+}
 
