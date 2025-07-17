@@ -1,0 +1,8 @@
+[package]
+name = "rml-data"
+version = "0.1.0"
+edition = "2024"
+description.workspace = true
+
+[dependencies]
+thiserror = "2.0.12"

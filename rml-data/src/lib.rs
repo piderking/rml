@@ -1,8 +1,6 @@
-mod loader;
+pub mod func;
+pub mod ops;
 pub mod tensor;
-pub mod frame;
-pub mod utils;
-#[cfg(test)]
-mod tests {
 
-}
+#[cfg(test)]
+mod tests {}
