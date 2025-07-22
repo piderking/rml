@@ -18,12 +18,11 @@
 				"rust-lang.rust-analyzer",
 				"yummygum.city-lights-theme",
 				"tal7aouy.icons",
-        		"gruntfuggly.todo-tree",
-        		"nefrob.vscode-just-syntax",
-        		"wakatime.vscode-wakatime",
-				//"ghcr.io/devcontainers/features/nvidia-cuda:1":{},
-        		"tamasfe.even-better-toml"
-
+				"gruntfuggly.todo-tree",
+				"nefrob.vscode-just-syntax",
+				"wakatime.vscode-wakatime",
+				"tamasfe.even-better-toml",
+				"icrawl.discord-vscode"
 			],
 			"settings":{
 				"files.exclude": {

@@ -1,5 +1,8 @@
 use std::ops::{Add, Div, Mul, Sub};
 
+use rml_math::function;
+
+use rml_math::func::{Relu, Sigmoid, Tanh};
 pub trait DTYPE
 where
     Self: Sized,
@@ -9,6 +12,10 @@ where
     Self: Sub<Self>,
     Self: Mul<Self>,
     Self: Div<Self>,
+    // Activation Functions
+    Self: Sigmoid,
+    Self: Relu,
+    Self: Tanh,
 {
     fn as_f32(&self) -> f32;
     fn from_f32(val: f32) -> Self;
@@ -28,6 +35,7 @@ pub trait Tensor<T: DTYPE> {
     fn as_slice(&self) -> &[T];
 }
 
+// Basic Implementation
 impl<T: DTYPE> Tensor<T> for Vec<T> {
     fn as_slice(&self) -> &[T] {
         self.as_slice()

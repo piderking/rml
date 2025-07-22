@@ -37,6 +37,16 @@ dependencies = [
 [[package]]
 name = "rml-math"
 version = "0.1.0"
+dependencies = [
+ "rml-data",
+]
+
+[[package]]
+name = "rml-ml"
+version = "0.1.0"
+dependencies = [
+ "rml-data",
+]
 
 [[package]]
 name = "syn"

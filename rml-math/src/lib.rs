@@ -1,5 +1,5 @@
+pub mod func;
 pub mod function;
-
 #[cfg(test)]
 mod tests {
     use super::*;
